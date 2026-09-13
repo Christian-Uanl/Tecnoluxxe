@@ -1,15 +1,16 @@
 const products = [
-  { id: 1, name: "Funda lisa / de un color / transparente", category: "Fundas", price: 150, icon: "📱" },
-  { id: 2, name: "Funda sublimada", category: "Fundas", price: 220, icon: "🎨" },
-  { id: 3, name: "Funda de vinil", category: "Fundas", price: 250, icon: "✨" },
-  { id: 4, name: "AirPods 2ª generación", category: "Audífonos", price: 350, icon: "🎧" },
-  { id: 5, name: "AirPods 3ª generación", category: "Audífonos", price: 400, icon: "🎧" },
-  { id: 6, name: "EarPods", category: "Audífonos", price: 150, icon: "🎵" },
-  { id: 7, name: "Micas (paquete de 2)", category: "Micas", price: 150, icon: "🪟" },
-  { id: 8, name: "Funda para AirPods", category: "Fundas", price: 150, icon: "🎧" },
-  { id: 9, name: "Funda para iPad", category: "Fundas", price: 200, icon: "💻" },
-  { id: 10, name: "Cargador con cuadro", category: "Cargadores", price: 250, icon: "🔌" },
-  { id: 11, name: "Cargador solo cable", category: "Cables", price: 150, icon: "🔗" }
+  { id: 1, name: "Funda lisa", category: "Fundas", price: 150, icon: "📱" },
+  { id: 2, name: "Funda transparente", category: "Fundas", price: 150, icon: "📱" }
+  { id: 3, name: "Funda sublimada", category: "Fundas", price: 220, icon: "🎨" },
+  { id: 4, name: "Funda de vinil", category: "Fundas", price: 250, icon: "✨" },
+  { id: 5, name: "AirPods 2ª generación", category: "Audífonos", price: 350, icon: "🎧" },
+  { id: 6, name: "AirPods 3ª generación", category: "Audífonos", price: 400, icon: "🎧" },
+  { id: 7, name: "EarPods", category: "Audífonos", price: 150, icon: "🎵" },
+  { id: 8, name: "Micas (paquete de 2)", category: "Micas", price: 150, icon: "🪟" },
+  { id: 9, name: "Funda para AirPods", category: "Fundas", price: 150, icon: "🎧" },
+  { id: 10, name: "Funda para iPad", category: "Fundas", price: 200, icon: "💻" },
+  { id: 11, name: "Cargador con cuadro", category: "Cargadores", price: 250, icon: "🔌" },
+  { id: 12, name: "Cargador solo cable", category: "Cables", price: 150, icon: "🔗" }
 ];
 
 const productsGrid = document.getElementById("productsGrid");
