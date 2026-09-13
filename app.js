@@ -1,6 +1,6 @@
 const products = [
   { id: 1, name: "Funda lisa", category: "Fundas", price: 150, icon: "📱" },
-  { id: 2, name: "Funda transparente", category: "Fundas", price: 150, icon: "📱" }
+  { id: 2, name: "Funda transparente", category: "Fundas", price: 150, icon: "📱" },
   { id: 3, name: "Funda sublimada", category: "Fundas", price: 220, icon: "🎨" },
   { id: 4, name: "Funda de vinil", category: "Fundas", price: 250, icon: "✨" },
   { id: 5, name: "AirPods 2ª generación", category: "Audífonos", price: 350, icon: "🎧" },
