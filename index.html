@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tecnoluxxe | Accesorios para celular</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#inicio">Tecnoluxxe</a>
+
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
+
+    <nav id="nav">
+      <a href="#inicio">Inicio</a>
+      <a href="#productos">Productos</a>
+      <a href="#categorias">Categorías</a>
+      <a href="#nosotros">Nosotros</a>
+      <button class="cart-open" id="cartOpen">🛒 Carrito <span id="cartCount">0</span></button>
+      <button class="login-open" id="loginOpen">Iniciar sesión</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div>
+        <p class="eyebrow">ACCESORIOS PARA TU CELULAR</p>
+        <h1>Todo lo que necesitas para proteger y mejorar tu teléfono.</h1>
+        <p>
+          Fundas, cargadores, cables, audífonos y más en un solo lugar.
+        </p>
+        <a class="primary-btn" href="#productos">Ver productos</a>
+      </div>
+      <div class="hero-card">
+        <div class="phone">📱</div>
+        <p>Accesorios prácticos, modernos y fáciles de encontrar.</p>
+      </div>
+    </section>
+
+    <section class="section" id="categorias">
+      <div class="section-title">
+        <p class="eyebrow">EXPLORA</p>
+        <h2>Categorías</h2>
+      </div>
+
+      <div class="category-grid" id="categoryGrid">
+        <button data-category="Fundas">📱 <span>Fundas</span></button>
+        <button data-category="Cargadores">🔌 <span>Cargadores</span></button>
+        <button data-category="Cables">🔗 <span>Cables</span></button>
+        <button data-category="Audífonos">🎧 <span>Audífonos</span></button>
+      </div>
+    </section>
+
+    <section class="section" id="productos">
+      <div class="section-title row">
+        <div>
+          <p class="eyebrow">TIENDA</p>
+          <h2>Productos</h2>
+        </div>
+
+        <input id="searchInput" class="search" type="search" placeholder="Buscar producto..." />
+      </div>
+
+      <div class="products-grid" id="productsGrid"></div>
+    </section>
+
+    <section class="section about" id="nosotros">
+      <div>
+        <p class="eyebrow">SOBRE NOSOTROS</p>
+        <h2>Una tienda sencilla y rápida</h2>
+      </div>
+      <p>
+        Este proyecto es una tienda web de accesorios para celular. El sistema
+        está preparado para conectarse con Supabase y administrar productos,
+        categorías, inventario y usuarios.
+      </p>
+    </section>
+  </main>
+
+
+  <div class="cart-overlay hidden" id="cartOverlay"></div>
+
+  <aside class="cart-panel hidden" id="cartPanel">
+    <div class="cart-header">
+      <div>
+        <p class="eyebrow">TU COMPRA</p>
+        <h2>Carrito</h2>
+      </div>
+      <button id="cartClose" class="cart-close" aria-label="Cerrar carrito">×</button>
+    </div>
+
+    <div class="cart-items" id="cartItems"></div>
+
+    <div class="cart-summary">
+      <div class="cart-total-row">
+        <span>Subtotal</span>
+        <strong id="cartTotal">$0 MXN</strong>
+      </div>
+      <button class="primary-btn full" id="checkoutBtn">Finalizar compra</button>
+      <button class="clear-cart-btn" id="clearCartBtn">Vaciar carrito</button>
+    </div>
+  </aside>
+
+  <button class="chat-fab" id="chatOpen" aria-label="Abrir chat">💬</button>
+
+  <aside class="chat-box hidden" id="chatBox">
+    <div class="chat-header">
+      <strong>Chat de ayuda</strong>
+      <button id="chatClose">×</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="bot-msg">Hola 👋 ¿En qué podemos ayudarte?</div>
+    </div>
+    <form class="chat-form" id="chatForm">
+      <input id="chatInput" placeholder="Escribe un mensaje..." required />
+      <button>Enviar</button>
+    </form>
+  </aside>
+
+  <div class="modal hidden" id="loginModal">
+    <div class="modal-card">
+      <button class="close-modal" id="loginClose">×</button>
+      <p class="eyebrow">CUENTA</p>
+      <h2>Iniciar sesión</h2>
+
+      <form id="loginForm">
+        <label>
+          Correo
+          <input type="email" id="email" placeholder="correo@ejemplo.com" required />
+        </label>
+
+        <label>
+          Contraseña
+          <input type="password" id="password" placeholder="••••••••" required />
+        </label>
+
+        <button class="primary-btn full" type="submit">Entrar</button>
+        <p class="form-message" id="loginMessage"></p>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <strong>Tecnoluxxe</strong>
+    <p>Proyecto académico · Página web de accesorios para celular</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
