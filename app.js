@@ -1,8 +1,8 @@
 const products = [
-  { id: 1, name: "Funda lisa", category: "Fundas", price: 150, icon: "https://tse1.mm.bing.net/th/id/OIP.UiXL92XSSXmRBseRCycnNQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
-  { id: 2, name: "Funda transparente", category: "Fundas", price: 150, icon: "📱" },
-  { id: 3, name: "Funda sublimada", category: "Fundas", price: 220, icon: "🎨" },
-  { id: 4, name: "Funda de vinil", category: "Fundas", price: 250, icon: "✨" },
+  { id: 1, name: "Funda lisa", category: "Fundas", price: 150, icon: "img/funda lisa.jpg" },
+  { id: 2, name: "Funda transparente", category: "Fundas", price: 150, icon: "img/funda transparente.jpg" },
+  { id: 3, name: "Funda sublimada", category: "Fundas", price: 220, icon: "img/funda sublimada.jpg" },
+  { id: 4, name: "Funda de vinil", category: "Fundas", price: 250, icon: "img/funda vinil.jpg" },
   { id: 5, name: "AirPods 2ª generación", category: "Audífonos", price: 350, icon: "🎧" },
   { id: 6, name: "AirPods 3ª generación", category: "Audífonos", price: 400, icon: "🎧" },
   { id: 7, name: "EarPods", category: "Audífonos", price: 150, icon: "🎵" },
