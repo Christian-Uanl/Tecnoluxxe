@@ -31,15 +31,17 @@ function renderProducts(list) {
     card.className = "product-card";
 
     card.innerHTML = `
-      card.innerHTML = `
-  <div class="product-img">
-    <img src="${product.icon}" alt="${product.name}">
-  </div>
-  <div class="product-info">
+      <div class="product-img">
+        <img src="${product.icon}" alt="${product.name}">
+      </div>
+
+      <div class="product-info">
         <p>${product.category}</p>
         <h3>${product.name}</h3>
         <p>$${product.price} MXN</p>
-        <button onclick="addToCart(${product.id})">Agregar al carrito</button>
+        <button onclick="addToCart(${product.id})">
+          Agregar al carrito
+        </button>
       </div>
     `;
 
@@ -58,22 +60,16 @@ searchInput.addEventListener("input", () => {
   );
 
   renderProducts(filtered);
-
-searchInput.addEventListener("input", () => {
-  const value = searchInput.value.toLowerCase();
-
-  const filtered = products.filter(product =>
-    product.name.toLowerCase().includes(value) ||
-    product.category.toLowerCase().includes(value)
-  );
-
-  renderProducts(filtered);
 });
 
 document.querySelectorAll("[data-category]").forEach(button => {
   button.addEventListener("click", () => {
     const category = button.dataset.category;
-    renderProducts(products.filter(product => product.category === category));
+
+    renderProducts(
+      products.filter(product => product.category === category)
+    );
+
     document.getElementById("productos").scrollIntoView();
   });
 });
@@ -94,12 +90,18 @@ function saveCart() {
 
 function addToCart(productId) {
   const product = products.find(item => item.id === productId);
+
+  if (!product) return;
+
   const existing = cart.find(item => item.id === productId);
 
   if (existing) {
     existing.quantity += 1;
   } else {
-    cart.push({ ...product, quantity: 1 });
+    cart.push({
+      ...product,
+      quantity: 1
+    });
   }
 
   saveCart();
@@ -109,6 +111,7 @@ function addToCart(productId) {
 
 function changeQuantity(productId, amount) {
   const item = cart.find(product => product.id === productId);
+
   if (!item) return;
 
   item.quantity += amount;
@@ -123,13 +126,21 @@ function changeQuantity(productId, amount) {
 
 function removeFromCart(productId) {
   cart = cart.filter(product => product.id !== productId);
+
   saveCart();
   renderCart();
 }
 
 function renderCart() {
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const totalItems = cart.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
+
+  const totalPrice = cart.reduce(
+    (sum, item) => sum + (item.price * item.quantity),
+    0
+  );
 
   cartCount.textContent = totalItems;
   cartTotal.textContent = `$${totalPrice} MXN`;
@@ -142,24 +153,52 @@ function renderCart() {
         <p>Agrega productos para verlos aquí.</p>
       </div>
     `;
+
     return;
   }
 
-  cartItems.innerHTML = cart.map(item => `
-    <div class="cart-item">
-      <div class="cart-item-icon">${item.icon}</div>
-      <div>
-        <h4>${item.name}</h4>
-        <p>$${item.price} MXN c/u</p>
-        <div class="cart-controls">
-          <button onclick="changeQuantity(${item.id}, -1)">−</button>
-          <strong>${item.quantity}</strong>
-          <button onclick="changeQuantity(${item.id}, 1)">+</button>
+  cartItems.innerHTML = cart.map(item => {
+
+    const isImage = item.icon.startsWith("img/");
+
+    return `
+      <div class="cart-item">
+
+        <div class="cart-item-icon">
+          ${
+            isImage
+              ? `<img src="${item.icon}" alt="${item.name}">`
+              : item.icon
+          }
         </div>
+
+        <div>
+          <h4>${item.name}</h4>
+          <p>$${item.price} MXN c/u</p>
+
+          <div class="cart-controls">
+            <button onclick="changeQuantity(${item.id}, -1)">
+              −
+            </button>
+
+            <strong>${item.quantity}</strong>
+
+            <button onclick="changeQuantity(${item.id}, 1)">
+              +
+            </button>
+          </div>
+        </div>
+
+        <button
+          class="remove-item"
+          onclick="removeFromCart(${item.id})"
+          title="Eliminar">
+          🗑️
+        </button>
+
       </div>
-      <button class="remove-item" onclick="removeFromCart(${item.id})" title="Eliminar">🗑️</button>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
 function openCart() {
@@ -192,7 +231,9 @@ checkoutBtn.addEventListener("click", () => {
     return;
   }
 
-  alert("Compra de prueba lista. Después esta función puede conectarse con Supabase o una pantalla de pago.");
+  alert(
+    "Compra de prueba lista. Después esta función puede conectarse con Supabase o una pantalla de pago."
+  );
 });
 
 renderCart();
@@ -210,16 +251,21 @@ const loginClose = document.getElementById("loginClose");
 const loginForm = document.getElementById("loginForm");
 const loginMessage = document.getElementById("loginMessage");
 
-loginOpen.addEventListener("click", () => loginModal.classList.remove("hidden"));
-loginClose.addEventListener("click", () => loginModal.classList.add("hidden"));
+loginOpen.addEventListener("click", () => {
+  loginModal.classList.remove("hidden");
+});
+
+loginClose.addEventListener("click", () => {
+  loginModal.classList.add("hidden");
+});
 
 loginForm.addEventListener("submit", event => {
   event.preventDefault();
 
   const email = document.getElementById("email").value;
-  loginMessage.textContent = `Sesión de prueba iniciada con ${email}`;
 
-  // AQUÍ se reemplazará por Supabase Auth.
+  loginMessage.textContent =
+    `Sesión de prueba iniciada con ${email}`;
 });
 
 const chatOpen = document.getElementById("chatOpen");
@@ -229,27 +275,39 @@ const chatForm = document.getElementById("chatForm");
 const chatInput = document.getElementById("chatInput");
 const chatMessages = document.getElementById("chatMessages");
 
-chatOpen.addEventListener("click", () => chatBox.classList.remove("hidden"));
-chatClose.addEventListener("click", () => chatBox.classList.add("hidden"));
+chatOpen.addEventListener("click", () => {
+  chatBox.classList.remove("hidden");
+});
+
+chatClose.addEventListener("click", () => {
+  chatBox.classList.add("hidden");
+});
 
 chatForm.addEventListener("submit", event => {
   event.preventDefault();
 
   const text = chatInput.value.trim();
+
   if (!text) return;
 
   const userMessage = document.createElement("div");
   userMessage.className = "user-msg";
   userMessage.textContent = text;
+
   chatMessages.appendChild(userMessage);
 
   chatInput.value = "";
 
   setTimeout(() => {
     const botMessage = document.createElement("div");
+
     botMessage.className = "bot-msg";
-    botMessage.textContent = "Gracias por escribirnos. Un asesor revisará tu mensaje.";
+
+    botMessage.textContent =
+      "Gracias por escribirnos. Un asesor revisará tu mensaje.";
+
     chatMessages.appendChild(botMessage);
+
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }, 450);
 
