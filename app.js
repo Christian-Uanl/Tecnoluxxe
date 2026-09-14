@@ -1,8 +1,8 @@
 const products = [
-  { id: 1, name: "Funda lisa", category: "Fundas", price: 150, icon: "img/funda lisa.jpg" },
-  { id: 2, name: "Funda transparente", category: "Fundas", price: 150, icon: "img/funda transparente.jpg" },
-  { id: 3, name: "Funda sublimada", category: "Fundas", price: 220, icon: "img/funda sublimada.jpg" },
-  { id: 4, name: "Funda de vinil", category: "Fundas", price: 250, icon: "img/funda vinil.jpg" },
+  { id: 1, name: "Funda lisa", category: "Fundas", price: 150, icon: "img/funda lisas.webp" },
+  { id: 2, name: "Funda transparente", category: "Fundas", price: 150, icon: "img/fundas transparentes.webp" },
+  { id: 3, name: "Funda sublimada", category: "Fundas", price: 220, icon: "img/fundas subliminadas.jpg" },
+  { id: 4, name: "Funda de vinil", category: "Fundas", price: 250, icon: "img/fundas vinil.jpg" },
   { id: 5, name: "AirPods 2ª generación", category: "Audífonos", price: 350, icon: "🎧" },
   { id: 6, name: "AirPods 3ª generación", category: "Audífonos", price: 400, icon: "🎧" },
   { id: 7, name: "EarPods", category: "Audífonos", price: 150, icon: "🎵" },
