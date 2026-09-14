@@ -31,8 +31,11 @@ function renderProducts(list) {
     card.className = "product-card";
 
     card.innerHTML = `
-      <div class="product-img">${product.icon}</div>
-      <div class="product-info">
+      card.innerHTML = `
+  <div class="product-img">
+    <img src="${product.icon}" alt="${product.name}">
+  </div>
+  <div class="product-info">
         <p>${product.category}</p>
         <h3>${product.name}</h3>
         <p>$${product.price} MXN</p>
