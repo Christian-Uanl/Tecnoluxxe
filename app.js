@@ -58,6 +58,16 @@ searchInput.addEventListener("input", () => {
   );
 
   renderProducts(filtered);
+
+searchInput.addEventListener("input", () => {
+  const value = searchInput.value.toLowerCase();
+
+  const filtered = products.filter(product =>
+    product.name.toLowerCase().includes(value) ||
+    product.category.toLowerCase().includes(value)
+  );
+
+  renderProducts(filtered);
 });
 
 document.querySelectorAll("[data-category]").forEach(button => {
