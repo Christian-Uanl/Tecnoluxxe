@@ -1,5 +1,5 @@
 const products = [
-  { id: 1, name: "Funda lisa", category: "Fundas", price: 150, icon: "📱" },
+  { id: 1, name: "Funda lisa", category: "Fundas", price: 150, icon: "https://tse1.mm.bing.net/th/id/OIP.UiXL92XSSXmRBseRCycnNQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
   { id: 2, name: "Funda transparente", category: "Fundas", price: 150, icon: "📱" },
   { id: 3, name: "Funda sublimada", category: "Fundas", price: 220, icon: "🎨" },
   { id: 4, name: "Funda de vinil", category: "Fundas", price: 250, icon: "✨" },
