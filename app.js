@@ -21,6 +21,8 @@ const searchInput = document.getElementById("searchInput");
 
 let cart = JSON.parse(localStorage.getItem("tecnoluxxeCart") || "[]");
 function renderProducts(list) {
+
+function renderProducts(list) {
   productsGrid.innerHTML = "";
 
   if (!list.length) {
@@ -42,35 +44,22 @@ function renderProducts(list) {
       <div class="product-img">
         ${productImage}
       </div>
+
       <div class="product-info">
         <p>${product.category}</p>
         <h3>${product.name}</h3>
-<p>$${product.price} MXN</p>
+        <p>$${product.price} MXN</p>
 
-<div class="product-options">
-  <label>Selecciona un color:</label>
-  <select class="product-color" id="color-${product.id}">
-    <option value="">Elegir color</option>
-    <option value="Negro">Negro</option>
-    <option value="Blanco">Blanco</option>
-    <option value="Rosa">Rosa</option>
-    <option value="Azul">Azul</option>
-    <option value="Morado">Morado</option>
-    <option value="Rojo">Rojo</option>
-    <option value="Verde">Verde</option>
-    <option value="Transparente">Transparente</option>
-  </select>
-</div>
-
-<button onclick="addToCart(${product.id}, document.getElementById('color-${product.id}').value)">
-  Agregar al carrito
-</button>
+        <button type="button" onclick="openCustomize(${product.id})">
+          Agregar al carrito
+        </button>
       </div>
     `;
 
     productsGrid.appendChild(card);
   });
-} 
+}
+
 renderProducts(products);
 
 searchInput.addEventListener("input", () => {
