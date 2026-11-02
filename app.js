@@ -636,29 +636,63 @@ function openCustomize(productId) {
   const name = selectedProduct.name.toLowerCase();
 
   if (name.includes("funda") && !name.includes("vinil") && !name.includes("sublimada")) {
-    customFields.innerHTML += `
-      <label>Marca del dispositivo:</label>
-      <select id="customBrand">
-        <option value="">Selecciona una marca</option>
-        ${Object.keys(catalogoModelos).map(marca =>
-          `<option value="${marca}">${marca}</option>`
-        ).join("")}
-      </select>
+if (name.includes("funda") && !name.includes("vinil") && !name.includes("sublimada")) {
+  customFields.innerHTML += `
+    <label>Marca del dispositivo:</label>
+    <select id="customBrand">
+      <option value="">Selecciona una marca</option>
+      ${Object.keys(catalogoModelos).map(marca =>
+        `<option value="${marca}">${marca}</option>`
+      ).join("")}
+    </select>
 
-      <label>Modelo:</label>
-      <select id="customModel" disabled>
-        <option value="">Primero selecciona una marca</option>
-      </select>
+    <label>Modelo:</label>
+    <select id="customModel" disabled>
+      <option value="">Primero selecciona una marca</option>
+    </select>
 
-      <label>Color:</label>
-      <select id="customColor">
-        <option value="">Selecciona un color</option>
-        ${catalogoColores.map(color =>
-          `<option value="${color}">${color}</option>`
-        ).join("")}
-      </select>
+    <label>Color:</label>
+    <select id="customColor">
+      <option value="">Selecciona un color</option>
+      ${catalogoColores.map(color =>
+        `<option value="${color}">${color}</option>`
+      ).join("")}
+    </select>
+  `;
+
+  const brandSelect = document.getElementById("customBrand");
+  const modelSelect = document.getElementById("customModel");
+
+  brandSelect.addEventListener("change", () => {
+    const modelos = catalogoModelos[brandSelect.value] || [];
+
+    modelSelect.innerHTML = `
+      <option value="">Selecciona un modelo</option>
+      ${modelos.map(modelo =>
+        `<option value="${modelo}">${modelo}</option>`
+      ).join("")}
     `;
 
+    modelSelect.disabled = !modelos.length;
+  });
+
+} else if (name.includes("vinil") || name.includes("sublimada")) {
+  customFields.innerHTML = `
+    <label>Describe el diseño que deseas:</label>
+    <textarea id="customDesign" placeholder="Escribe los detalles de tu diseño"></textarea>
+  `;
+
+} else if (name.includes("mica") || name.includes("cargador")) {
+  customFields.innerHTML = `
+    <label>Modelo del dispositivo:</label>
+    <input type="text" id="customModel" placeholder="Ej. iPhone 15, Samsung A54...">
+  `;
+
+} else {
+  customFields.innerHTML = `
+    <p>Este producto no requiere personalización.</p>
+  `;
+}
     const brandSelect = document.getElementById("customBrand");
     const modelSelect = document.getElementById("customModel");
 
