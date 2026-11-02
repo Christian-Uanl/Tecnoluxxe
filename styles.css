@@ -821,3 +821,84 @@ footer strong {
   color: #222;
   cursor: pointer;
 }
+
+
+/* VENTANA DE PERSONALIZACIÓN */
+
+.custom-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.custom-modal.hidden {
+  display: none;
+}
+
+.custom-modal-content {
+  background: #fff;
+  color: #222;
+  width: 100%;
+  max-width: 450px;
+  padding: 30px;
+  border-radius: 16px;
+  position: relative;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
+}
+
+.custom-modal-content h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.custom-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  border: none;
+  background: none;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.custom-modal-content label {
+  display: block;
+  margin: 15px 0 7px;
+  font-weight: bold;
+}
+
+.custom-modal-content select,
+.custom-modal-content textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.custom-modal-content textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+#confirmCustomize {
+  width: 100%;
+  padding: 13px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  background: #111;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#confirmCustomize:hover {
+  background: #333;
+}
