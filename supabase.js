@@ -5,3 +5,15 @@ const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
+supabaseClient
+    .from("productos")
+    .select("id_producto, nombre")
+    .then(({ data, error }) => {
+        if (error) {
+            console.error("Error de conexión:", error);
+            return;
+        }
+
+        console.log("¡Conexión exitosa con Supabase!");
+        console.table(data);
+    });
