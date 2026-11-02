@@ -359,6 +359,7 @@ ${design || "Quisiera recibir asesoría para elegir un diseño."}
 }
 
 
+
 function openCustomize(productId) {
   selectedProduct = products.find(p => p.id === productId);
 
@@ -381,6 +382,7 @@ function openCustomize(productId) {
   ) {
 
     if (name.includes("ipad")) {
+
       customFields.innerHTML = `
         <label>Modelo de iPad:</label>
         <select id="customModel">
@@ -398,6 +400,7 @@ function openCustomize(productId) {
       `;
 
     } else if (name.includes("airpods")) {
+
       customFields.innerHTML = `
         <label>Modelo de AirPods:</label>
         <select id="customModel">
@@ -413,6 +416,7 @@ function openCustomize(productId) {
       `;
 
     } else {
+
       customFields.innerHTML = `
         <label>Marca del dispositivo:</label>
         <select id="customBrand">
@@ -454,32 +458,34 @@ function openCustomize(productId) {
       </select>
     `;
 
-  customFields.innerHTML = `
-    <label>Describe el diseño que deseas:</label>
+  } else if (name.includes("vinil") || name.includes("sublimada")) {
 
-    <textarea
-      id="customDesign"
-      placeholder="Escribe los detalles de tu diseño">
-    </textarea>
+    customFields.innerHTML = `
+      <label>Describe el diseño que deseas:</label>
 
-    <p class="whatsapp-info">
-      ¿Necesitas ayuda con tu diseño o quieres enviar una imagen de referencia?
-      Contáctanos por WhatsApp.
-    </p>
+      <textarea
+        id="customDesign"
+        placeholder="Escribe los detalles de tu diseño">
+      </textarea>
 
-    <button
-      type="button"
-      id="whatsappCustomizeBtn"
-      class="whatsapp-customize-btn">
-      Contactar por WhatsApp
-    </button>
-  `;
+      <p class="whatsapp-info">
+        ¿Necesitas ayuda con tu diseño o quieres enviar una imagen de referencia?
+        Contáctanos por WhatsApp.
+      </p>
 
-  document.getElementById("whatsappCustomizeBtn")
-    .addEventListener("click", contactWhatsApp);
+      <button
+        type="button"
+        id="whatsappCustomizeBtn"
+        class="whatsapp-customize-btn">
+        Contactar por WhatsApp
+      </button>
+    `;
 
-}
+    document.getElementById("whatsappCustomizeBtn")
+      .addEventListener("click", contactWhatsApp);
+
   } else if (name.includes("mica")) {
+
     customFields.innerHTML = `
       <label>Marca del dispositivo:</label>
       <select id="customBrand">
@@ -511,6 +517,7 @@ function openCustomize(productId) {
       });
 
   } else if (name.includes("cargador")) {
+
     customFields.innerHTML = `
       <label>Modelo del dispositivo:</label>
       <input
@@ -520,6 +527,7 @@ function openCustomize(productId) {
     `;
 
   } else {
+
     customFields.innerHTML = `
       <p>Este producto no requiere personalización.</p>
     `;
@@ -527,6 +535,7 @@ function openCustomize(productId) {
 
   customizeModal.classList.remove("hidden");
 }
+
 
 customClose?.addEventListener("click", () => {
   customizeModal.classList.add("hidden");
