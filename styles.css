@@ -902,3 +902,31 @@ footer strong {
 #confirmCustomize:hover {
   background: #333;
 }
+
+
+/* Información de contacto para diseños personalizados */
+
+.whatsapp-info {
+  margin: 15px 0 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.whatsapp-customize-btn {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: #25D366;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.whatsapp-customize-btn:hover {
+  background-color: #1DA851;
+}
