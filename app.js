@@ -128,27 +128,35 @@ function addToCart(productId, selectedColor) {
   openCart();
 }
 
-function changeQuantity(productId, amount) {
-  const item = cart.find(product => product.id === productId);
+
+function changeQuantity(cartItemId, amount) {
+  const item = cart.find(product =>
+    product.cartItemId === cartItemId
+  );
 
   if (!item) return;
 
   item.quantity += amount;
 
   if (item.quantity <= 0) {
-    cart = cart.filter(product => product.id !== productId);
+    cart = cart.filter(product =>
+      product.cartItemId !== cartItemId
+    );
   }
 
   saveCart();
   renderCart();
 }
 
-function removeFromCart(productId) {
-  cart = cart.filter(product => product.id !== productId);
+function removeFromCart(cartItemId) {
+  cart = cart.filter(product =>
+    product.cartItemId !== cartItemId
+  );
 
   saveCart();
   renderCart();
 }
+
 
 function renderCart() {
   const totalItems = cart.reduce(
@@ -193,24 +201,25 @@ function renderCart() {
 
         <div>
           <h4>${item.name}</h4>
+          <p>${item.customization || ""}</p>
           <p>$${item.price} MXN c/u</p>
 
           <div class="cart-controls">
-            <button onclick="changeQuantity(${item.id}, -1)">
-              −
-            </button>
+          <button onclick="changeQuantity(${item.cartItemId}, -1)">
+            −
+          </button>
 
-            <strong>${item.quantity}</strong>
+          <strong>${item.quantity}</strong>
 
-            <button onclick="changeQuantity(${item.id}, 1)">
-              +
-            </button>
+          <button onclick="changeQuantity(${item.cartItemId}, 1)">
+            +
+          </button>
           </div>
         </div>
 
         <button
           class="remove-item"
-          onclick="removeFromCart(${item.id})"
+          onclick="removeFromCart(${item.cartItemId})"
           title="Eliminar">
           🗑️
         </button>
