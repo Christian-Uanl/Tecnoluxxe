@@ -626,6 +626,8 @@ const confirmCustomize = document.getElementById("confirmCustomize");
 let selectedProduct = null;
 
 function openCustomize(productId) {
+  
+function openCustomize(productId) {
   selectedProduct = products.find(p => p.id === productId);
 
   if (!selectedProduct) return;
@@ -635,64 +637,140 @@ function openCustomize(productId) {
 
   const name = selectedProduct.name.toLowerCase();
 
-  if (name.includes("funda") && !name.includes("vinil") && !name.includes("sublimada")) {
-if (name.includes("funda") && !name.includes("vinil") && !name.includes("sublimada")) {
-  customFields.innerHTML += `
-    <label>Marca del dispositivo:</label>
-    <select id="customBrand">
-      <option value="">Selecciona una marca</option>
-      ${Object.keys(catalogoModelos).map(marca =>
-        `<option value="${marca}">${marca}</option>`
-      ).join("")}
-    </select>
+  // FUNDAS NORMALES
+  if (
+    name.includes("funda") &&
+    !name.includes("vinil") &&
+    !name.includes("sublimada")
+  ) {
+    if (name.includes("ipad")) {
+      customFields.innerHTML = `
+        <label>Modelo de iPad:</label>
+        <select id="customModel">
+          <option value="">Selecciona un modelo</option>
+          <option>iPad 9ª generación</option>
+          <option>iPad 10ª generación</option>
+          <option>iPad Air</option>
+          <option>iPad Air M2</option>
+          <option>iPad Air M3</option>
+          <option>iPad Pro 11 pulgadas</option>
+          <option>iPad Pro 12.9 pulgadas</option>
+          <option>iPad Pro 13 pulgadas</option>
+          <option>Otro modelo</option>
+        </select>
+      `;
+    } else if (name.includes("airpods")) {
+      customFields.innerHTML = `
+        <label>Modelo de AirPods:</label>
+        <select id="customModel">
+          <option value="">Selecciona un modelo</option>
+          <option>AirPods 1ª generación</option>
+          <option>AirPods 2ª generación</option>
+          <option>AirPods 3ª generación</option>
+          <option>AirPods 4ª generación</option>
+          <option>AirPods Pro</option>
+          <option>AirPods Pro 2ª generación</option>
+          <option>Otro modelo</option>
+        </select>
+      `;
+    } else {
+      customFields.innerHTML = `
+        <label>Marca del dispositivo:</label>
+        <select id="customBrand">
+          <option value="">Selecciona una marca</option>
+          ${Object.keys(catalogoModelos).map(marca =>
+            `<option value="${marca}">${marca}</option>`
+          ).join("")}
+        </select>
 
-    <label>Modelo:</label>
-    <select id="customModel" disabled>
-      <option value="">Primero selecciona una marca</option>
-    </select>
+        <label>Modelo:</label>
+        <select id="customModel" disabled>
+          <option value="">Primero selecciona una marca</option>
+        </select>
+      `;
 
-    <label>Color:</label>
-    <select id="customColor">
-      <option value="">Selecciona un color</option>
-      ${catalogoColores.map(color =>
-        `<option value="${color}">${color}</option>`
-      ).join("")}
-    </select>
-  `;
+      document.getElementById("customBrand")
+        .addEventListener("change", event => {
+          const modelos = catalogoModelos[event.target.value] || [];
+          const modelSelect = document.getElementById("customModel");
 
-  const brandSelect = document.getElementById("customBrand");
-  const modelSelect = document.getElementById("customModel");
+          modelSelect.innerHTML = `
+            <option value="">Selecciona un modelo</option>
+            ${modelos.map(modelo =>
+              `<option value="${modelo}">${modelo}</option>`
+            ).join("")}
+          `;
 
-  brandSelect.addEventListener("change", () => {
-    const modelos = catalogoModelos[brandSelect.value] || [];
+          modelSelect.disabled = !modelos.length;
+        });
+    }
 
-    modelSelect.innerHTML = `
-      <option value="">Selecciona un modelo</option>
-      ${modelos.map(modelo =>
-        `<option value="${modelo}">${modelo}</option>`
-      ).join("")}
+    customFields.innerHTML += `
+      <label>Color:</label>
+      <select id="customColor">
+        <option value="">Selecciona un color</option>
+        ${catalogoColores.map(color =>
+          `<option value="${color}">${color}</option>`
+        ).join("")}
+      </select>
     `;
 
-    modelSelect.disabled = !modelos.length;
-  });
+  // FUNDAS DE DISEÑO
+  } else if (name.includes("vinil") || name.includes("sublimada")) {
+    customFields.innerHTML = `
+      <label>Describe el diseño que deseas:</label>
+      <textarea id="customDesign"
+        placeholder="Escribe los detalles de tu diseño"></textarea>
+    `;
 
-} else if (name.includes("vinil") || name.includes("sublimada")) {
-  customFields.innerHTML = `
-    <label>Describe el diseño que deseas:</label>
-    <textarea id="customDesign" placeholder="Escribe los detalles de tu diseño"></textarea>
-  `;
+  // MICAS
+  } else if (name.includes("mica")) {
+    customFields.innerHTML = `
+      <label>Marca del dispositivo:</label>
+      <select id="customBrand">
+        <option value="">Selecciona una marca</option>
+        ${Object.keys(catalogoModelos).map(marca =>
+          `<option value="${marca}">${marca}</option>`
+        ).join("")}
+      </select>
 
-} else if (name.includes("mica") || name.includes("cargador")) {
-  customFields.innerHTML = `
-    <label>Modelo del dispositivo:</label>
-    <input type="text" id="customModel" placeholder="Ej. iPhone 15, Samsung A54...">
-  `;
+      <label>Modelo:</label>
+      <select id="customModel" disabled>
+        <option value="">Primero selecciona una marca</option>
+      </select>
+    `;
 
-} else {
-  customFields.innerHTML = `
-    <p>Este producto no requiere personalización.</p>
-  `;
+    document.getElementById("customBrand")
+      .addEventListener("change", event => {
+        const modelos = catalogoModelos[event.target.value] || [];
+        const modelSelect = document.getElementById("customModel");
+
+        modelSelect.innerHTML = `
+          <option value="">Selecciona un modelo</option>
+          ${modelos.map(modelo =>
+            `<option value="${modelo}">${modelo}</option>`
+          ).join("")}
+        `;
+
+        modelSelect.disabled = !modelos.length;
+      });
+
+  } else if (name.includes("cargador")) {
+    customFields.innerHTML = `
+      <label>Modelo del dispositivo:</label>
+      <input type="text" id="customModel"
+        placeholder="Ej. iPhone 15, Samsung A54...">
+    `;
+
+  } else {
+    customFields.innerHTML = `
+      <p>Este producto no requiere personalización.</p>
+    `;
+  }
+
+  customizeModal.classList.remove("hidden");
 }
+
     const brandSelect = document.getElementById("customBrand");
     const modelSelect = document.getElementById("customModel");
 
@@ -739,21 +817,152 @@ customizeModal.addEventListener("click", (event) => {
     customizeModal.classList.add("hidden");
   }
 });
-
+  
+confirmCustomize.addEventListener("click", () => {
+ 
 confirmCustomize.addEventListener("click", () => {
   if (!selectedProduct) return;
 
   const name = selectedProduct.name.toLowerCase();
   let customization = [];
 
-  if (name.includes("funda") && !name.includes("vinil") && !name.includes("sublimada")) {
+  if (
+    name.includes("funda") &&
+    !name.includes("vinil") &&
+    !name.includes("sublimada")
+  ) {
+    const model = document.getElementById("customModel")?.value;
+    const color = document.getElementById("customColor")?.value;
+
+    if (!model || !color) {
+      alert("Selecciona el modelo y el color.");
+      return;
+    }
+
+    const brand = document.getElementById("customBrand")?.value;
+
+    if (document.getElementById("customBrand") && !brand) {
+      alert("Selecciona la marca del dispositivo.");
+      return;
+    }
+
+    customization = [
+      ...(brand ? [`Marca: ${brand}`] : []),
+      `Modelo: ${model}`,
+      `Color: ${color}`
+    ];
+
+  } else if (name.includes("vinil") || name.includes("sublimada")) {
+    const design = document.getElementById("customDesign").value.trim();
+
+    if (!design) {
+      alert("Describe el diseño que deseas.");
+      return;
+    }
+
+    customization = [`Diseño: ${design}`];
+
+  } else if (name.includes("mica")) {
     const brand = document.getElementById("customBrand").value;
     const model = document.getElementById("customModel").value;
-    const color = document.getElementById("customColor").value;
 
-    if (!brand || !model || !color) {
-      alert("Selecciona la marca, el modelo y el color.");
+    if (!brand || !model) {
+      alert("Selecciona la marca y el modelo.");
       return;
+    }
+
+    customization = [`Marca: ${brand}`, `Modelo: ${model}`];
+
+  } else if (name.includes("cargador")) {
+    const model = document.getElementById("customModel").value.trim();
+
+    if (!model) {
+      alert("Escribe el modelo de tu dispositivo.");
+      return;
+    }
+
+    customization = [`Modelo: ${model}`];
+  }
+
+  cart.push({
+    ...selectedProduct,
+    cartItemId: Date.now() + Math.random(),
+    quantity: 1,
+    customization: customization.join(" | ")
+  });
+
+  saveCart();
+  renderCart();
+
+  customizeModal.classList.add("hidden");
+  selectedProduct = null;
+
+  openCart();
+});
+
+    }
+
+    const brand = document.getElementById("customBrand")?.value;
+
+    if (document.getElementById("customBrand") && !brand) {
+      alert("Selecciona la marca del dispositivo.");
+      return;
+    }
+
+    customization = [
+      ...(brand ? [`Marca: ${brand}`] : []),
+      `Modelo: ${model}`,
+      `Color: ${color}`
+    ];
+
+  } else if (name.includes("vinil") || name.includes("sublimada")) {
+    const design = document.getElementById("customDesign").value.trim();
+
+    if (!design) {
+      alert("Describe el diseño que deseas.");
+      return;
+    }
+
+    customization = [`Diseño: ${design}`];
+
+  } else if (name.includes("mica")) {
+    const brand = document.getElementById("customBrand").value;
+    const model = document.getElementById("customModel").value;
+
+    if (!brand || !model) {
+      alert("Selecciona la marca y el modelo.");
+      return;
+    }
+
+    customization = [`Marca: ${brand}`, `Modelo: ${model}`];
+
+  } else if (name.includes("cargador")) {
+    const model = document.getElementById("customModel").value.trim();
+
+    if (!model) {
+      alert("Escribe el modelo de tu dispositivo.");
+      return;
+    }
+
+    customization = [`Modelo: ${model}`];
+  }
+
+  cart.push({
+    ...selectedProduct,
+    cartItemId: Date.now() + Math.random(),
+    quantity: 1,
+    customization: customization.join(" | ")
+  });
+
+  saveCart();
+  renderCart();
+
+  customizeModal.classList.add("hidden");
+  selectedProduct = null;
+
+  openCart();
+});
+
     }
 
     customization = [`Marca: ${brand}`, `Modelo: ${model}`, `Color: ${color}`];
