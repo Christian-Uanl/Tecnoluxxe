@@ -337,6 +337,28 @@ const confirmCustomize = document.getElementById("confirmCustomize");
 
 let selectedProduct = null;
 
+const whatsappNumber = "528118246564";
+
+function contactWhatsApp() {
+  if (!selectedProduct) return;
+
+  const design = document.getElementById("customDesign")?.value.trim() || "";
+
+  const message = `
+Hola, me interesa personalizar una ${selectedProduct.name} de Tecnoluxxe.
+
+Mi idea o diseño es:
+${design || "Quisiera recibir asesoría para elegir un diseño."}
+
+¿Me podrían ayudar con información y opciones disponibles?
+  `.trim();
+
+  const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+  window.open(url, "_blank");
+}
+
+
 function openCustomize(productId) {
   selectedProduct = products.find(p => p.id === productId);
 
@@ -432,15 +454,31 @@ function openCustomize(productId) {
       </select>
     `;
 
-  } else if (name.includes("vinil") || name.includes("sublimada")) {
-    customFields.innerHTML = `
-      <label>Describe el diseño que deseas:</label>
-      <textarea
-        id="customDesign"
-        placeholder="Escribe los detalles de tu diseño">
-      </textarea>
-    `;
+  customFields.innerHTML = `
+    <label>Describe el diseño que deseas:</label>
 
+    <textarea
+      id="customDesign"
+      placeholder="Escribe los detalles de tu diseño">
+    </textarea>
+
+    <p class="whatsapp-info">
+      ¿Necesitas ayuda con tu diseño o quieres enviar una imagen de referencia?
+      Contáctanos por WhatsApp.
+    </p>
+
+    <button
+      type="button"
+      id="whatsappCustomizeBtn"
+      class="whatsapp-customize-btn">
+      Contactar por WhatsApp
+    </button>
+  `;
+
+  document.getElementById("whatsappCustomizeBtn")
+    .addEventListener("click", contactWhatsApp);
+
+}
   } else if (name.includes("mica")) {
     customFields.innerHTML = `
       <label>Marca del dispositivo:</label>
