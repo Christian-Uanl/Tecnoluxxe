@@ -319,3 +319,339 @@ chatForm.addEventListener("submit", event => {
 
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
+
+/* =====================================
+   FUNCIONES ADICIONALES TECNOLUXXE
+   ===================================== */
+
+// CAMBIA ESTE NÚMERO POR EL WHATSAPP
+// DEL EMPLEADO, INCLUYENDO EL CÓDIGO DE PAÍS.
+// Ejemplo México: 528112345678
+const TECNOLUXXE_WHATSAPP = "528118246564";
+
+
+const employeeButton = document.createElement("a");
+
+employeeButton.className = "employee-contact";
+employeeButton.href = "#";
+employeeButton.textContent = "💬 Atención en línea";
+employeeButton.target = "_blank";
+
+employeeButton.addEventListener("click", event => {
+  event.preventDefault();
+
+  const message = encodeURIComponent(
+    "Hola, necesito ayuda con mi compra en Tecnoluxxe."
+  );
+
+  window.open(
+    `https://wa.me/${TECNOLUXXE_WHATSAPP}?text=${message}`,
+    "_blank"
+  );
+});
+
+document.body.appendChild(employeeButton);
+
+
+function addProductOptions() {
+
+  document.querySelectorAll(".product-card").forEach(card => {
+
+    if (card.dataset.optionsAdded) return;
+
+    const title = card.querySelector("h3");
+
+    if (!title) return;
+
+    const productName = title.textContent.trim();
+
+    const button = card.querySelector(".product-info button");
+
+    if (!button) return;
+
+    if (
+      productName === "Funda lisa" ||
+      productName === "Funda transparente"
+    ) {
+
+      card.dataset.optionsAdded = "true";
+
+      const options = document.createElement("div");
+      options.className = "product-options";
+
+      options.innerHTML = `
+        <label>Selecciona un color:</label>
+
+        <select class="case-color">
+          <option value="">Seleccionar color</option>
+          <option>Negro</option>
+          <option>Blanco</option>
+          <option>Azul</option>
+          <option>Rosa</option>
+          <option>Morado</option>
+          <option>Rojo</option>
+          <option>Verde</option>
+          <option>Transparente</option>
+        </select>
+
+        <label>Modelo de celular:</label>
+
+        <select class="case-model">
+          <option value="">Seleccionar modelo</option>
+          <option>iPhone 11</option>
+          <option>iPhone 12</option>
+          <option>iPhone 13</option>
+          <option>iPhone 14</option>
+          <option>iPhone 15</option>
+          <option>iPhone 16</option>
+          <option>Samsung Galaxy</option>
+          <option>Motorola</option>
+          <option>Xiaomi</option>
+          <option>Otro modelo</option>
+        </select>
+      `;
+
+      button.before(options);
+      button.removeAttribute("onclick");
+
+      button.addEventListener("click", () => {
+
+        const color = card.querySelector(".case-color").value;
+        const model = card.querySelector(".case-model").value;
+
+        if (!color || !model) {
+          alert("Selecciona el color y modelo de tu celular.");
+          return;
+        }
+
+        const product = products.find(
+          item => item.name === productName
+        );
+
+        if (!product) return;
+        
+        const newItem = {
+          ...product,
+          id: Date.now() + Math.floor(Math.random() * 1000),
+          name: `${product.name} (${color} - ${model})`,
+          quantity: 1
+        };
+
+        cart.push(newItem);
+
+        saveCart();
+        renderCart();
+        openCart();
+
+      });
+    }
+
+
+    if (productName === "Funda de vinil") {
+
+      card.dataset.optionsAdded = "true";
+
+      button.removeAttribute("onclick");
+
+      const customizeButton = document.createElement("button");
+
+      customizeButton.className = "customize-btn";
+      customizeButton.textContent = "Personalizar mi funda";
+
+      button.after(customizeButton);
+
+      button.textContent = "Agregar funda de vinil";
+
+      button.addEventListener("click", () => {
+        addToCart(4);
+      });
+
+      customizeButton.addEventListener("click", () => {
+        document.getElementById("vinylModal").classList.remove("hidden");
+      });
+    }
+
+  });
+}
+
+const productObserver = new MutationObserver(() => {
+  addProductOptions();
+});
+
+productObserver.observe(productsGrid, {
+  childList: true
+});
+
+addProductOptions();
+
+const vinylModal = document.createElement("div");
+
+vinylModal.id = "vinylModal";
+vinylModal.className = "custom-modal hidden";
+
+vinylModal.innerHTML = `
+  <div class="custom-modal-content">
+
+    <button class="custom-close" id="closeVinylModal">
+      ×
+    </button>
+
+    <h2>Personaliza tu funda</h2>
+
+    <p>
+      Cuéntanos cómo quieres que sea tu funda de vinil.
+    </p>
+
+    <form id="vinylForm">
+
+      <label>Modelo de celular:</label>
+
+      <input
+        type="text"
+        id="vinylModel"
+        placeholder="Ej. iPhone 15 Pro"
+        required
+      >
+
+      <label>Describe tu diseño:</label>
+
+      <textarea
+        id="vinylDescription"
+        placeholder="Describe los colores, imágenes, nombres o detalles que deseas..."
+        required
+      ></textarea>
+
+      <label>Agrega tus imágenes de referencia:</label>
+
+      <input
+        type="file"
+        id="vinylImages"
+        accept="image/*"
+        multiple
+      >
+
+      <p id="vinylFileMessage">
+        Puedes seleccionar varias imágenes.
+      </p>
+
+      <button type="submit">
+        Enviar personalización
+      </button>
+
+    </form>
+
+  </div>
+`;
+
+document.body.appendChild(vinylModal);
+
+document.getElementById("closeVinylModal").addEventListener("click", () => {
+  vinylModal.classList.add("hidden");
+});
+
+vinylModal.addEventListener("click", event => {
+  if (event.target === vinylModal) {
+    vinylModal.classList.add("hidden");
+  }
+});
+
+document.getElementById("vinylImages").addEventListener("change", event => {
+
+  const files = Array.from(event.target.files);
+
+  document.getElementById("vinylFileMessage").textContent =
+    files.length
+      ? `Imágenes seleccionadas: ${files.map(file => file.name).join(", ")}`
+      : "Puedes seleccionar varias imágenes.";
+
+});
+
+document.getElementById("vinylForm").addEventListener("submit", event => {
+
+  event.preventDefault();
+
+  const model = document.getElementById("vinylModel").value.trim();
+
+  const description = document.getElementById("vinylDescription").value.trim();
+
+  const files = Array.from(
+    document.getElementById("vinylImages").files
+  );
+
+  const message = `
+Hola, quiero personalizar una funda de vinil en Tecnoluxxe.
+
+Modelo de celular: ${model}
+
+Descripción del diseño:
+${description}
+
+Imágenes seleccionadas: ${files.length}
+
+Enviaré las imágenes adjuntas en este chat.
+  `;
+
+  window.open(
+    `https://wa.me/${TECNOLUXXE_WHATSAPP}?text=${encodeURIComponent(message)}`,
+    "_blank"
+  );
+
+  vinylModal.classList.add("hidden");
+  document.getElementById("vinylForm").reset();
+
+  document.getElementById("vinylFileMessage").textContent =
+    "Puedes seleccionar varias imágenes.";
+
+});
+
+const oldCheckoutButton = document.getElementById("checkoutBtn");
+
+const newCheckoutButton = oldCheckoutButton.cloneNode(true);
+
+oldCheckoutButton.replaceWith(newCheckoutButton);
+
+newCheckoutButton.addEventListener("click", () => {
+
+  if (!cart.length) {
+    alert("Tu carrito está vacío.");
+    return;
+  }
+
+  const selectedPayment = document.querySelector(
+    'input[name="paymentMethod"]:checked'
+  );
+
+  if (!selectedPayment) {
+    alert("Selecciona un método de pago.");
+    return;
+  }
+
+  const payment = selectedPayment.value;
+
+  const orderDetails = cart.map(item => {
+    return `- ${item.name} x${item.quantity}: $${item.price * item.quantity} MXN`;
+  }).join("\n");
+
+  const total = cart.reduce((sum, item) => {
+    return sum + item.price * item.quantity;
+  }, 0);
+
+  const message = `
+Hola, quiero realizar un pedido en Tecnoluxxe.
+
+PRODUCTOS:
+${orderDetails}
+
+TOTAL: $${total} MXN
+
+MÉTODO DE PAGO: ${payment}
+
+Quisiera recibir información para continuar con mi compra.
+  `;
+
+  window.open(
+    `https://wa.me/${TECNOLUXXE_WHATSAPP}?text=${encodeURIComponent(message)}`,
+    "_blank"
+  );
+
+});
