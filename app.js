@@ -1,4 +1,4 @@
-const products = [
+let products = [];
   { id: 1, name: "Funda lisa", category: "Fundas", price: 150, icon: "img/funda lisas.webp" },
   { id: 2, name: "Funda transparente", category: "Fundas", price: 150, icon: "img/fundas transparentes.webp" },
   { id: 3, name: "Funda sublimada", category: "Fundas", price: 220, icon: "img/fundas subliminadas.jpg" },
