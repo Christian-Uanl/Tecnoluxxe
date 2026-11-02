@@ -3,16 +3,19 @@ const products = [
   { id: 2, name: "Funda transparente", category: "Fundas", price: 150, icon: "img/fundas transparentes.webp" },
   { id: 3, name: "Funda sublimada", category: "Fundas", price: 220, icon: "img/fundas subliminadas.jpg" },
   { id: 4, name: "Funda de vinil", category: "Fundas", price: 250, icon: "img/fundas vinil.jpg" },
-{ id: 5, name: "AirPods 2ª generación", category: "Audífonos", price: 350, icon: "img/airpods-2gen.jpg" },
-{ id: 6, name: "AirPods 3ª generación", category: "Audífonos", price: 400, icon: "img/airpods-3gen.webp" },
-{ id: 7, name: "EarPods", category: "Audífonos", price: 150, icon: "img/earpods.webp" },
-  { id: 8, name: "Micas (paquete de 2)", category: "Micas", price: 150, icon: "🪟" },
-  { id: 9, name: "Funda para AirPods", category: "Fundas", price: 150, icon: "🎧" },
-  { id: 10, name: "Funda para iPad", category: "Fundas", price: 200, icon: "💻" },
-  { id: 11, name: "Cargador con cuadro", category: "Cargadores", price: 250, icon: "🔌" },
-  { id: 12, name: "Cargador solo cable", category: "Cables", price: 150, icon: "🔗" }
-]; 
- 
+
+  { id: 5, name: "AirPods 2ª generación", category: "Audífonos", price: 350, icon: "img/airpods-2gen.jpg" },
+  { id: 6, name: "AirPods 3ª generación", category: "Audífonos", price: 400, icon: "img/airpods-3gen.webp" },
+  { id: 7, name: "EarPods", category: "Audífonos", price: 150, icon: "img/earpods.webp" },
+
+  { id: 8, name: "Micas (paquete de 2)", category: "Micas", price: 150, icon: "img/micas.webp" },
+  { id: 9, name: "Funda para AirPods", category: "Fundas", price: 150, icon: "img/funda airpods.webp" },
+  { id: 10, name: "Funda para iPad", category: "Fundas", price: 200, icon: "img/funda ipad.webp" },
+
+  { id: 11, name: "Cargador completo", category: "Cargadores", price: 250, icon: "img/cargador completo.webp" },
+  { id: 12, name: "Cargador solo cable", category: "Cables", price: 150, icon: "img/cargador cable.webp" }
+];
+
 const productsGrid = document.getElementById("productsGrid");
 const searchInput = document.getElementById("searchInput");
 
