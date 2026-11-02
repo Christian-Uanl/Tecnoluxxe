@@ -156,29 +156,7 @@ function renderProducts(list) {
   });
 }
 
-async function loadProducts() {
-  const { data, error } = await supabaseClient
-    .from("productos")
-    .select("id_producto, nombre, precio_base, imagen, activo")
-    .eq("activo", true);
-
-  if (error) {
-    console.error("Error al cargar productos:", error);
-    return;
-  }
-
-  products = data.map(product => ({
-    id: product.id_producto,
-    name: product.nombre,
-    category: "Productos",
-    price: Number(product.precio_base),
-    icon: product.imagen || "📦"
-  }));
-
-  renderProducts(products);
-}
-
-loadProducts();
+renderProducts(products);
 
 if (searchInput) {
   searchInput.addEventListener("input", () => {
