@@ -12,7 +12,7 @@ const products = [
   { id: 11, name: "Cargador con cuadro", category: "Cargadores", price: 250, icon: "🔌" },
   { id: 12, name: "Cargador solo cable", category: "Cables", price: 150, icon: "🔗" }
 ]; 
-
+ 
 const productsGrid = document.getElementById("productsGrid");
 const searchInput = document.getElementById("searchInput");
 
