@@ -1,13 +1,3 @@
-
-// ==========================================
-// TECNOLUXXE - ARCHIVO PRINCIPAL APP.JS
-// ==========================================
-
-
-// ==========================================
-// 1. CATÁLOGO DE PRODUCTOS
-// ==========================================
-
 const products = [
   { id: 1, name: "Funda lisa", category: "Fundas", price: 150, icon: "img/funda lisas.webp" },
   { id: 2, name: "Funda transparente", category: "Fundas", price: 150, icon: "img/fundas transparentes.webp" },
@@ -22,11 +12,6 @@ const products = [
   { id: 11, name: "Cargador completo", category: "Cargadores", price: 250, icon: "img/cargador completo.webp" },
   { id: 12, name: "Cargador solo cable", category: "Cables", price: 150, icon: "img/cargador cable.webp" }
 ];
-
-
-// ==========================================
-// 2. CATÁLOGO DE MODELOS
-// ==========================================
 
 const catalogoModelos = {
 
@@ -112,11 +97,6 @@ const catalogoModelos = {
   ]
 };
 
-
-// ==========================================
-// 3. CATÁLOGO DE COLORES
-// ==========================================
-
 const catalogoColores = [
   "Transparente / cristal",
   "Negro", "Blanco", "Gris", "Plata", "Dorado", "Champagne",
@@ -131,19 +111,10 @@ const catalogoColores = [
 ];
 
 
-// ==========================================
-// 4. VARIABLES GENERALES Y CARRITO
-// ==========================================
-
 const productsGrid = document.getElementById("productsGrid");
 const searchInput = document.getElementById("searchInput");
 
 let cart = JSON.parse(localStorage.getItem("tecnoluxxeCart") || "[]");
-
-
-// ==========================================
-// 5. MOSTRAR PRODUCTOS
-// ==========================================
 
 function renderProducts(list) {
   if (!productsGrid) return;
@@ -187,11 +158,6 @@ function renderProducts(list) {
 
 renderProducts(products);
 
-
-// ==========================================
-// 6. BUSCADOR
-// ==========================================
-
 if (searchInput) {
   searchInput.addEventListener("input", () => {
     const value = searchInput.value.toLowerCase();
@@ -205,11 +171,6 @@ if (searchInput) {
   });
 }
 
-
-// ==========================================
-// 7. FILTROS POR CATEGORÍA
-// ==========================================
-
 document.querySelectorAll("[data-category]").forEach(button => {
   button.addEventListener("click", () => {
     const category = button.dataset.category;
@@ -221,11 +182,6 @@ document.querySelectorAll("[data-category]").forEach(button => {
     document.getElementById("productos")?.scrollIntoView();
   });
 });
-
-
-// ==========================================
-// 8. ELEMENTOS DEL CARRITO
-// ==========================================
 
 const cartOpen = document.getElementById("cartOpen");
 const cartPanel = document.getElementById("cartPanel");
@@ -241,15 +197,9 @@ function saveCart() {
   localStorage.setItem("tecnoluxxeCart", JSON.stringify(cart));
 }
 
-
-// ==========================================
-// 9. MOSTRAR CARRITO
-// ==========================================
-
 function renderCart() {
   if (!cartItems) return;
 
-  // Compatibilidad con productos guardados anteriormente
   cart.forEach(item => {
     if (!item.cartItemId) {
       item.cartItemId = Date.now() + Math.random();
@@ -327,11 +277,6 @@ function renderCart() {
   saveCart();
 }
 
-
-// ==========================================
-// 10. CAMBIAR CANTIDAD Y ELIMINAR PRODUCTOS
-// ==========================================
-
 function changeQuantity(cartItemId, amount) {
   const item = cart.find(product =>
     product.cartItemId === cartItemId
@@ -360,11 +305,6 @@ function removeFromCart(cartItemId) {
   renderCart();
 }
 
-
-// ==========================================
-// 11. ABRIR Y CERRAR CARRITO
-// ==========================================
-
 function openCart() {
   cartPanel?.classList.remove("hidden");
   cartOverlay?.classList.remove("hidden");
@@ -379,11 +319,6 @@ cartOpen?.addEventListener("click", openCart);
 cartClose?.addEventListener("click", closeCart);
 cartOverlay?.addEventListener("click", closeCart);
 
-
-// ==========================================
-// 12. VACIAR CARRITO
-// ==========================================
-
 clearCartBtn?.addEventListener("click", () => {
   if (!cart.length) return;
 
@@ -394,11 +329,6 @@ clearCartBtn?.addEventListener("click", () => {
   }
 });
 
-
-// ==========================================
-// 13. PERSONALIZACIÓN DE PRODUCTOS
-// ==========================================
-
 const customizeModal = document.getElementById("customizeModal");
 const customTitle = document.getElementById("customTitle");
 const customFields = document.getElementById("customFields");
@@ -406,9 +336,6 @@ const customClose = document.getElementById("customClose");
 const confirmCustomize = document.getElementById("confirmCustomize");
 
 let selectedProduct = null;
-
-
-// Abrir ventana de personalización
 
 function openCustomize(productId) {
   selectedProduct = products.find(p => p.id === productId);
@@ -425,16 +352,11 @@ function openCustomize(productId) {
 
   const name = selectedProduct.name.toLowerCase();
 
-
-  // FUNDAS NORMALES
-
   if (
     name.includes("funda") &&
     !name.includes("vinil") &&
     !name.includes("sublimada")
   ) {
-
-    // FUNDA PARA IPAD
 
     if (name.includes("ipad")) {
       customFields.innerHTML = `
@@ -453,8 +375,6 @@ function openCustomize(productId) {
         </select>
       `;
 
-    // FUNDA PARA AIRPODS
-
     } else if (name.includes("airpods")) {
       customFields.innerHTML = `
         <label>Modelo de AirPods:</label>
@@ -469,8 +389,6 @@ function openCustomize(productId) {
           <option>Otro modelo</option>
         </select>
       `;
-
-    // FUNDAS PARA CELULARES
 
     } else {
       customFields.innerHTML = `
@@ -504,8 +422,6 @@ function openCustomize(productId) {
         });
     }
 
-    // COLOR DE LAS FUNDAS
-
     customFields.innerHTML += `
       <label>Color:</label>
       <select id="customColor">
@@ -516,9 +432,6 @@ function openCustomize(productId) {
       </select>
     `;
 
-
-  // FUNDAS DE VINIL Y SUBLIMADAS
-
   } else if (name.includes("vinil") || name.includes("sublimada")) {
     customFields.innerHTML = `
       <label>Describe el diseño que deseas:</label>
@@ -527,9 +440,6 @@ function openCustomize(productId) {
         placeholder="Escribe los detalles de tu diseño">
       </textarea>
     `;
-
-
-  // MICAS
 
   } else if (name.includes("mica")) {
     customFields.innerHTML = `
@@ -562,9 +472,6 @@ function openCustomize(productId) {
         modelSelect.disabled = !modelos.length;
       });
 
-
-  // CARGADORES
-
   } else if (name.includes("cargador")) {
     customFields.innerHTML = `
       <label>Modelo del dispositivo:</label>
@@ -574,9 +481,6 @@ function openCustomize(productId) {
         placeholder="Ej. iPhone 15, Samsung A54...">
     `;
 
-
-  // AUDÍFONOS
-
   } else {
     customFields.innerHTML = `
       <p>Este producto no requiere personalización.</p>
@@ -585,9 +489,6 @@ function openCustomize(productId) {
 
   customizeModal.classList.remove("hidden");
 }
-
-
-// Cerrar ventana
 
 customClose?.addEventListener("click", () => {
   customizeModal.classList.add("hidden");
@@ -599,17 +500,11 @@ customizeModal?.addEventListener("click", event => {
   }
 });
 
-
-// Confirmar y agregar al carrito
-
 confirmCustomize?.addEventListener("click", () => {
   if (!selectedProduct) return;
 
   const name = selectedProduct.name.toLowerCase();
   let customization = [];
-
-
-  // FUNDAS
 
   if (
     name.includes("funda") &&
@@ -636,9 +531,6 @@ confirmCustomize?.addEventListener("click", () => {
       `Color: ${color}`
     ];
 
-
-  // VINIL Y SUBLIMADAS
-
   } else if (name.includes("vinil") || name.includes("sublimada")) {
     const design = document.getElementById("customDesign").value.trim();
 
@@ -648,9 +540,6 @@ confirmCustomize?.addEventListener("click", () => {
     }
 
     customization = [`Diseño: ${design}`];
-
-
-  // MICAS
 
   } else if (name.includes("mica")) {
     const brand = document.getElementById("customBrand").value;
@@ -666,9 +555,6 @@ confirmCustomize?.addEventListener("click", () => {
       `Modelo: ${model}`
     ];
 
-
-  // CARGADORES
-
   } else if (name.includes("cargador")) {
     const model = document.getElementById("customModel").value.trim();
 
@@ -679,9 +565,6 @@ confirmCustomize?.addEventListener("click", () => {
 
     customization = [`Modelo: ${model}`];
   }
-
-
-  // AGREGAR PRODUCTO
 
   cart.push({
     ...selectedProduct,
@@ -698,11 +581,6 @@ confirmCustomize?.addEventListener("click", () => {
 
   openCart();
 });
-
-
-// ==========================================
-// 14. REGISTRAR PEDIDOS Y MÉTODOS DE PAGO
-// ==========================================
 
 if (checkoutBtn) {
   checkoutBtn.addEventListener("click", () => {
@@ -765,22 +643,12 @@ if (checkoutBtn) {
   });
 }
 
-
-// ==========================================
-// 15. MENÚ DE NAVEGACIÓN
-// ==========================================
-
 const menuBtn = document.getElementById("menuBtn");
 const nav = document.getElementById("nav");
 
 menuBtn?.addEventListener("click", () => {
   nav?.classList.toggle("open");
 });
-
-
-// ==========================================
-// 16. INICIO DE SESIÓN DE PRUEBA
-// ==========================================
 
 const loginModal = document.getElementById("loginModal");
 const loginOpen = document.getElementById("loginOpen");
@@ -806,11 +674,6 @@ loginForm?.addEventListener("submit", event => {
       `Sesión de prueba iniciada con ${email}`;
   }
 });
-
-
-// ==========================================
-// 17. CHAT DE ATENCIÓN
-// ==========================================
 
 const chatOpen = document.getElementById("chatOpen");
 const chatClose = document.getElementById("chatClose");
@@ -856,10 +719,5 @@ chatForm?.addEventListener("submit", event => {
 
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
-
-
-// ==========================================
-// 18. INICIALIZAR CARRITO
-// ==========================================
 
 renderCart();
