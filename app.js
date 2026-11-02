@@ -1,346 +1,32 @@
+
+// ==========================================
+// TECNOLUXXE - ARCHIVO PRINCIPAL APP.JS
+// ==========================================
+
+
+// ==========================================
+// 1. CATÁLOGO DE PRODUCTOS
+// ==========================================
+
 const products = [
   { id: 1, name: "Funda lisa", category: "Fundas", price: 150, icon: "img/funda lisas.webp" },
   { id: 2, name: "Funda transparente", category: "Fundas", price: 150, icon: "img/fundas transparentes.webp" },
   { id: 3, name: "Funda sublimada", category: "Fundas", price: 220, icon: "img/fundas subliminadas.jpg" },
   { id: 4, name: "Funda de vinil", category: "Fundas", price: 250, icon: "img/fundas vinil.jpg" },
-
   { id: 5, name: "AirPods 2ª generación", category: "Audífonos", price: 350, icon: "img/airpods-2gen.jpg" },
   { id: 6, name: "AirPods 3ª generación", category: "Audífonos", price: 400, icon: "img/airpods-3gen.webp" },
   { id: 7, name: "EarPods", category: "Audífonos", price: 150, icon: "img/earpods.webp" },
-
   { id: 8, name: "Micas (paquete de 2)", category: "Micas", price: 150, icon: "img/micas.webp" },
   { id: 9, name: "Funda para AirPods", category: "Fundas", price: 150, icon: "img/funda airpods.webp" },
   { id: 10, name: "Funda para iPad", category: "Fundas", price: 200, icon: "img/funda ipad.webp" },
-
   { id: 11, name: "Cargador completo", category: "Cargadores", price: 250, icon: "img/cargador completo.webp" },
   { id: 12, name: "Cargador solo cable", category: "Cables", price: 150, icon: "img/cargador cable.webp" }
 ];
 
-const productsGrid = document.getElementById("productsGrid");
-const searchInput = document.getElementById("searchInput");
 
-let cart = JSON.parse(localStorage.getItem("tecnoluxxeCart") || "[]");
-
-function renderProducts(list) {
-  productsGrid.innerHTML = "";
-
-  if (!list.length) {
-    productsGrid.innerHTML = "<p>No se encontraron productos.</p>";
-    return;
-  }
-
-  list.forEach(product => {
-    const card = document.createElement("article");
-    card.className = "product-card";
-
-    const isImage = product.icon.startsWith("img/");
-
-    const productImage = isImage
-      ? `<img src="${product.icon}" alt="${product.name}">`
-      : `<span style="font-size: 5rem;">${product.icon}</span>`;
-
-    card.innerHTML = `
-      <div class="product-img">
-        ${productImage}
-      </div>
-
-      <div class="product-info">
-        <p>${product.category}</p>
-        <h3>${product.name}</h3>
-        <p>$${product.price} MXN</p>
-
-        <button type="button" onclick="openCustomize(${product.id})">
-          Agregar al carrito
-        </button>
-      </div>
-    `;
-
-    productsGrid.appendChild(card);
-  });
-}
-
-renderProducts(products);
-
-searchInput.addEventListener("input", () => {
-  const value = searchInput.value.toLowerCase();
-
-  const filtered = products.filter(product =>
-    product.name.toLowerCase().includes(value) ||
-    product.category.toLowerCase().includes(value)
-  );
-
-  renderProducts(filtered);
-});
-
-document.querySelectorAll("[data-category]").forEach(button => {
-  button.addEventListener("click", () => {
-    const category = button.dataset.category;
-
-    renderProducts(
-      products.filter(product => product.category === category)
-    );
-
-    document.getElementById("productos").scrollIntoView();
-  });
-});
-
-const cartOpen = document.getElementById("cartOpen");
-const cartPanel = document.getElementById("cartPanel");
-const cartOverlay = document.getElementById("cartOverlay");
-const cartClose = document.getElementById("cartClose");
-const cartItems = document.getElementById("cartItems");
-const cartCount = document.getElementById("cartCount");
-const cartTotal = document.getElementById("cartTotal");
-const clearCartBtn = document.getElementById("clearCartBtn");
-const checkoutBtn = document.getElementById("checkoutBtn");
-
-function saveCart() {
-  localStorage.setItem("tecnoluxxeCart", JSON.stringify(cart));
-}
-
-
-function addToCart(productId, selectedColor) {
-  const product = products.find(item => item.id === productId);
-
-  if (!product) return;
-
-  if (!selectedColor) {
-    alert("Selecciona un color antes de agregar el producto.");
-    return;
-  }
-
-  const existing = cart.find(item =>
-    item.id === productId && item.color === selectedColor
-  );
-
-  if (existing) {
-    existing.quantity += 1;
-  } else {
-    cart.push({
-      ...product,
-      color: selectedColor,
-      quantity: 1
-    });
-  }
-
-  saveCart();
-  renderCart();
-  openCart();
-}
-
-
-function changeQuantity(cartItemId, amount) {
-  const item = cart.find(product =>
-    product.cartItemId === cartItemId
-  );
-
-  if (!item) return;
-
-  item.quantity += amount;
-
-  if (item.quantity <= 0) {
-    cart = cart.filter(product =>
-      product.cartItemId !== cartItemId
-    );
-  }
-
-  saveCart();
-  renderCart();
-}
-
-function removeFromCart(cartItemId) {
-  cart = cart.filter(product =>
-    product.cartItemId !== cartItemId
-  );
-
-  saveCart();
-  renderCart();
-}
-
-
-function renderCart() {
-  const totalItems = cart.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
-
-  const totalPrice = cart.reduce(
-    (sum, item) => sum + (item.price * item.quantity),
-    0
-  );
-
-  cartCount.textContent = totalItems;
-  cartTotal.textContent = `$${totalPrice} MXN`;
-
-  if (!cart.length) {
-    cartItems.innerHTML = `
-      <div class="cart-empty">
-        <div style="font-size:3rem;">🛒</div>
-        <h3>Tu carrito está vacío</h3>
-        <p>Agrega productos para verlos aquí.</p>
-      </div>
-    `;
-
-    return;
-  }
-
-  cartItems.innerHTML = cart.map(item => {
-
-    const isImage = item.icon.startsWith("img/");
-
-    return `
-      <div class="cart-item">
-
-        <div class="cart-item-icon">
-          ${
-            isImage
-              ? `<img src="${item.icon}" alt="${item.name}">`
-              : item.icon
-          }
-        </div>
-
-        <div>
-          <h4>${item.name}</h4>
-          <p>${item.customization || ""}</p>
-          <p>$${item.price} MXN c/u</p>
-
-          <div class="cart-controls">
-          <button onclick="changeQuantity(${item.cartItemId}, -1)">
-            −
-          </button>
-
-          <strong>${item.quantity}</strong>
-
-          <button onclick="changeQuantity(${item.cartItemId}, 1)">
-            +
-          </button>
-          </div>
-        </div>
-
-        <button
-          class="remove-item"
-          onclick="removeFromCart(${item.cartItemId})"
-          title="Eliminar">
-          🗑️
-        </button>
-
-      </div>
-    `;
-  }).join("");
-}
-
-function openCart() {
-  cartPanel.classList.remove("hidden");
-  cartOverlay.classList.remove("hidden");
-}
-
-function closeCart() {
-  cartPanel.classList.add("hidden");
-  cartOverlay.classList.add("hidden");
-}
-
-cartOpen.addEventListener("click", openCart);
-cartClose.addEventListener("click", closeCart);
-cartOverlay.addEventListener("click", closeCart);
-
-clearCartBtn.addEventListener("click", () => {
-  if (!cart.length) return;
-
-  if (confirm("¿Quieres vaciar todo el carrito?")) {
-    cart = [];
-    saveCart();
-    renderCart();
-  }
-});
-
-checkoutBtn.addEventListener("click", () => {
-  if (!cart.length) {
-    alert("Tu carrito está vacío.");
-    return;
-  }
-
-  alert(
-    "Compra de prueba lista. Después esta función puede conectarse con Supabase o una pantalla de pago."
-  );
-});
-
-renderCart();
-
-const menuBtn = document.getElementById("menuBtn");
-const nav = document.getElementById("nav");
-
-menuBtn.addEventListener("click", () => {
-  nav.classList.toggle("open");
-});
-
-const loginModal = document.getElementById("loginModal");
-const loginOpen = document.getElementById("loginOpen");
-const loginClose = document.getElementById("loginClose");
-const loginForm = document.getElementById("loginForm");
-const loginMessage = document.getElementById("loginMessage");
-
-loginOpen.addEventListener("click", () => {
-  loginModal.classList.remove("hidden");
-});
-
-loginClose.addEventListener("click", () => {
-  loginModal.classList.add("hidden");
-});
-
-loginForm.addEventListener("submit", event => {
-  event.preventDefault();
-
-  const email = document.getElementById("email").value;
-
-  loginMessage.textContent =
-    `Sesión de prueba iniciada con ${email}`;
-});
-
-const chatOpen = document.getElementById("chatOpen");
-const chatClose = document.getElementById("chatClose");
-const chatBox = document.getElementById("chatBox");
-const chatForm = document.getElementById("chatForm");
-const chatInput = document.getElementById("chatInput");
-const chatMessages = document.getElementById("chatMessages");
-
-chatOpen.addEventListener("click", () => {
-  chatBox.classList.remove("hidden");
-});
-
-chatClose.addEventListener("click", () => {
-  chatBox.classList.add("hidden");
-});
-
-chatForm.addEventListener("submit", event => {
-  event.preventDefault();
-
-  const text = chatInput.value.trim();
-
-  if (!text) return;
-
-  const userMessage = document.createElement("div");
-  userMessage.className = "user-msg";
-  userMessage.textContent = text;
-
-  chatMessages.appendChild(userMessage);
-
-  chatInput.value = "";
-
-  setTimeout(() => {
-    const botMessage = document.createElement("div");
-
-    botMessage.className = "bot-msg";
-
-    botMessage.textContent =
-      "Gracias por escribirnos. Un asesor revisará tu mensaje.";
-
-    chatMessages.appendChild(botMessage);
-
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }, 450);
-
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-});
+// ==========================================
+// 2. CATÁLOGO DE MODELOS
+// ==========================================
 
 const catalogoModelos = {
 
@@ -427,6 +113,10 @@ const catalogoModelos = {
 };
 
 
+// ==========================================
+// 3. CATÁLOGO DE COLORES
+// ==========================================
+
 const catalogoColores = [
   "Transparente / cristal",
   "Negro", "Blanco", "Gris", "Plata", "Dorado", "Champagne",
@@ -440,192 +130,274 @@ const catalogoColores = [
   "Menta", "Turquesa", "Multicolor", "Personalizado"
 ];
 
-const catalogoTransparentes = [
-  "TR-01 Transparente total",
-  "TR-02 Transparente con borde de color",
-  "TR-03 Transparente con MagSafe",
-  "TR-04 Transparente con borde + MagSafe",
-  "TR-05 Transparente con tarjetero",
-  "TR-06 Transparente tarjetero sin borde marcado",
-  "TR-07 Transparente con tapa / porta tarjeta",
-  "TR-08 Transparente reforzada",
-  "TR-09 Transparente con glitter",
-  "TR-10 Transparente con diseño impreso"
-];
+
+// ==========================================
+// 4. VARIABLES GENERALES Y CARRITO
+// ==========================================
+
+const productsGrid = document.getElementById("productsGrid");
+const searchInput = document.getElementById("searchInput");
+
+let cart = JSON.parse(localStorage.getItem("tecnoluxxeCart") || "[]");
 
 
-function addProductOptions() {
+// ==========================================
+// 5. MOSTRAR PRODUCTOS
+// ==========================================
 
-  document.querySelectorAll(".product-card").forEach(card => {
+function renderProducts(list) {
+  if (!productsGrid) return;
 
-    if (card.dataset.optionsAdded) return;
+  productsGrid.innerHTML = "";
 
-    const title = card.querySelector("h3");
-    const button = card.querySelector(".product-info button");
+  if (!list.length) {
+    productsGrid.innerHTML = "<p>No se encontraron productos.</p>";
+    return;
+  }
 
-    if (!title || !button) return;
+  list.forEach(product => {
+    const card = document.createElement("article");
+    card.className = "product-card";
 
-    const productName = title.textContent.trim();
+    const isImage = product.icon.startsWith("img/");
 
-    const esLisa = productName === "Funda lisa";
-    const esTransparente = productName === "Funda transparente";
-    const esIpad = productName === "Funda para iPad";
-    const esAirpods = productName === "Funda para AirPods";
+    const productImage = isImage
+      ? `<img src="${product.icon}" alt="${product.name}">`
+      : `<span style="font-size:5rem;">${product.icon}</span>`;
 
-    const esVinil = productName === "Funda de vinil";
-    const esSublimada = productName === "Funda sublimada";
+    card.innerHTML = `
+      <div class="product-img">
+        ${productImage}
+      </div>
 
-    if (
-      !esLisa && !esTransparente && !esIpad &&
-      !esAirpods && !esVinil && !esSublimada
-    ) return;
+      <div class="product-info">
+        <p>${product.category}</p>
+        <h3>${product.name}</h3>
+        <p>$${product.price} MXN</p>
 
-    card.dataset.optionsAdded = "true";
+        <button type="button" onclick="openCustomize(${product.id})">
+          Agregar al carrito
+        </button>
+      </div>
+    `;
 
-    if (esLisa || esTransparente || esIpad || esAirpods) {
+    productsGrid.appendChild(card);
+  });
+}
 
-      const options = document.createElement("div");
-      options.className = "product-options";
+renderProducts(products);
 
-      let modelos = [];
 
-      if (esIpad) {
-        modelos = [
-          "iPad 9ª generación",
-          "iPad 10ª generación",
-          "iPad Air",
-          "iPad Air M2",
-          "iPad Air M3",
-          "iPad Pro 11 pulgadas",
-          "iPad Pro 12.9 pulgadas",
-          "iPad Pro 13 pulgadas",
-          "Otro modelo"
-        ];
-      } else if (esAirpods) {
-        modelos = [
-          "AirPods 1ª generación",
-          "AirPods 2ª generación",
-          "AirPods 3ª generación",
-          "AirPods 4ª generación",
-          "AirPods Pro",
-          "AirPods Pro 2ª generación",
-          "Otro modelo"
-        ];
-      } else {
-        modelos = Object.values(catalogoModelos).flat();
-      }
+// ==========================================
+// 6. BUSCADOR
+// ==========================================
 
-      options.innerHTML = `
-        <label>Marca / modelo:</label>
+if (searchInput) {
+  searchInput.addEventListener("input", () => {
+    const value = searchInput.value.toLowerCase();
 
-        <select class="case-model" required>
-          <option value="">Seleccionar modelo</option>
-          ${modelos.map(modelo =>
-            `<option value="${modelo}">${modelo}</option>`
-          ).join("")}
-        </select>
+    const filtered = products.filter(product =>
+      product.name.toLowerCase().includes(value) ||
+      product.category.toLowerCase().includes(value)
+    );
 
-        <label>Color:</label>
-
-        <select class="case-color" required>
-          <option value="">Seleccionar color</option>
-          ${catalogoColores.map(color =>
-            `<option value="${color}">${color}</option>`
-          ).join("")}
-        </select>
-
-        ${esTransparente ? `
-          <label>Tipo de diseño:</label>
-
-          <select class="case-design" required>
-            <option value="">Seleccionar diseño</option>
-            ${catalogoTransparentes.map(diseno =>
-              `<option value="${diseno}">${diseno}</option>`
-            ).join("")}
-          </select>
-        ` : ""}
-
-        ${esLisa ? `
-          <label>Acabado:</label>
-          <select class="case-finish">
-            <option>Mate</option>
-            <option>Brillante</option>
-          </select>
-
-          <label>Material:</label>
-          <select class="case-material">
-            <option>Silicona</option>
-            <option>Rígida</option>
-          </select>
-        ` : ""}
-      `;
-
-      button.before(options);
-      button.removeAttribute("onclick");
-
-      button.addEventListener("click", () => {
-
-        const model = card.querySelector(".case-model").value;
-        const color = card.querySelector(".case-color").value;
-        const design = card.querySelector(".case-design")?.value || "";
-        const finish = card.querySelector(".case-finish")?.value || "";
-        const material = card.querySelector(".case-material")?.value || "";
-
-        if (!model || !color || (esTransparente && !design)) {
-          alert("Completa las opciones del producto antes de agregarlo.");
-          return;
-        }
-
-        const product = products.find(item => item.name === productName);
-        if (!product) return;
-
-        const details = [
-          model,
-          color,
-          design,
-          finish,
-          material
-        ].filter(Boolean).join(" - ");
-
-        cart.push({
-          ...product,
-          id: Date.now() + Math.floor(Math.random() * 10000),
-          name: `${product.name} (${details})`,
-          quantity: 1
-        });
-
-        saveCart();
-        renderCart();
-        openCart();
-      });
-    }
-
-    if (esVinil || esSublimada) {
-
-      const customizeButton = document.createElement("button");
-      customizeButton.className = "customize-btn";
-      customizeButton.textContent = esVinil
-        ? "Personalizar funda de vinil"
-        : "Personalizar funda sublimada";
-
-      button.after(customizeButton);
-
-      customizeButton.addEventListener("click", () => {
-        document.getElementById("vinylModal").classList.remove("hidden");
-
-        const modalTitle = document.querySelector("#vinylModal h2");
-        if (modalTitle) {
-          modalTitle.textContent = esVinil
-            ? "Personaliza tu funda de vinil"
-            : "Personaliza tu funda sublimada";
-        }
-      });
-    }
-
+    renderProducts(filtered);
   });
 }
 
 
+// ==========================================
+// 7. FILTROS POR CATEGORÍA
+// ==========================================
+
+document.querySelectorAll("[data-category]").forEach(button => {
+  button.addEventListener("click", () => {
+    const category = button.dataset.category;
+
+    renderProducts(
+      products.filter(product => product.category === category)
+    );
+
+    document.getElementById("productos")?.scrollIntoView();
+  });
+});
+
+
+// ==========================================
+// 8. ELEMENTOS DEL CARRITO
+// ==========================================
+
+const cartOpen = document.getElementById("cartOpen");
+const cartPanel = document.getElementById("cartPanel");
+const cartOverlay = document.getElementById("cartOverlay");
+const cartClose = document.getElementById("cartClose");
+const cartItems = document.getElementById("cartItems");
+const cartCount = document.getElementById("cartCount");
+const cartTotal = document.getElementById("cartTotal");
+const clearCartBtn = document.getElementById("clearCartBtn");
+const checkoutBtn = document.getElementById("checkoutBtn");
+
+function saveCart() {
+  localStorage.setItem("tecnoluxxeCart", JSON.stringify(cart));
+}
+
+
+// ==========================================
+// 9. MOSTRAR CARRITO
+// ==========================================
+
+function renderCart() {
+  if (!cartItems) return;
+
+  // Compatibilidad con productos guardados anteriormente
+  cart.forEach(item => {
+    if (!item.cartItemId) {
+      item.cartItemId = Date.now() + Math.random();
+    }
+
+    if (!item.quantity) {
+      item.quantity = 1;
+    }
+  });
+
+  const totalItems = cart.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
+
+  const totalPrice = cart.reduce(
+    (sum, item) => sum + (item.price * item.quantity),
+    0
+  );
+
+  if (cartCount) cartCount.textContent = totalItems;
+  if (cartTotal) cartTotal.textContent = `$${totalPrice} MXN`;
+
+  if (!cart.length) {
+    cartItems.innerHTML = `
+      <div class="cart-empty">
+        <div style="font-size:3rem;">🛒</div>
+        <h3>Tu carrito está vacío</h3>
+        <p>Agrega productos para verlos aquí.</p>
+      </div>
+    `;
+
+    return;
+  }
+
+  cartItems.innerHTML = cart.map(item => {
+    const isImage = item.icon.startsWith("img/");
+
+    return `
+      <div class="cart-item">
+
+        <div class="cart-item-icon">
+          ${
+            isImage
+              ? `<img src="${item.icon}" alt="${item.name}">`
+              : item.icon
+          }
+        </div>
+
+        <div>
+          <h4>${item.name}</h4>
+          <p>${item.customization || ""}</p>
+          <p>$${item.price} MXN c/u</p>
+
+          <div class="cart-controls">
+            <button onclick="changeQuantity(${item.cartItemId}, -1)">−</button>
+
+            <strong>${item.quantity}</strong>
+
+            <button onclick="changeQuantity(${item.cartItemId}, 1)">+</button>
+          </div>
+        </div>
+
+        <button
+          class="remove-item"
+          onclick="removeFromCart(${item.cartItemId})"
+          title="Eliminar">
+          🗑️
+        </button>
+
+      </div>
+    `;
+  }).join("");
+
+  saveCart();
+}
+
+
+// ==========================================
+// 10. CAMBIAR CANTIDAD Y ELIMINAR PRODUCTOS
+// ==========================================
+
+function changeQuantity(cartItemId, amount) {
+  const item = cart.find(product =>
+    product.cartItemId === cartItemId
+  );
+
+  if (!item) return;
+
+  item.quantity += amount;
+
+  if (item.quantity <= 0) {
+    cart = cart.filter(product =>
+      product.cartItemId !== cartItemId
+    );
+  }
+
+  saveCart();
+  renderCart();
+}
+
+function removeFromCart(cartItemId) {
+  cart = cart.filter(product =>
+    product.cartItemId !== cartItemId
+  );
+
+  saveCart();
+  renderCart();
+}
+
+
+// ==========================================
+// 11. ABRIR Y CERRAR CARRITO
+// ==========================================
+
+function openCart() {
+  cartPanel?.classList.remove("hidden");
+  cartOverlay?.classList.remove("hidden");
+}
+
+function closeCart() {
+  cartPanel?.classList.add("hidden");
+  cartOverlay?.classList.add("hidden");
+}
+
+cartOpen?.addEventListener("click", openCart);
+cartClose?.addEventListener("click", closeCart);
+cartOverlay?.addEventListener("click", closeCart);
+
+
+// ==========================================
+// 12. VACIAR CARRITO
+// ==========================================
+
+clearCartBtn?.addEventListener("click", () => {
+  if (!cart.length) return;
+
+  if (confirm("¿Quieres vaciar todo el carrito?")) {
+    cart = [];
+    saveCart();
+    renderCart();
+  }
+});
+
+
+// ==========================================
+// 13. PERSONALIZACIÓN DE PRODUCTOS
+// ==========================================
 
 const customizeModal = document.getElementById("customizeModal");
 const customTitle = document.getElementById("customTitle");
@@ -635,22 +407,35 @@ const confirmCustomize = document.getElementById("confirmCustomize");
 
 let selectedProduct = null;
 
+
+// Abrir ventana de personalización
+
 function openCustomize(productId) {
   selectedProduct = products.find(p => p.id === productId);
 
   if (!selectedProduct) return;
+
+  if (!customizeModal || !customFields || !customTitle) {
+    alert("No se encontró la ventana de personalización en el HTML.");
+    return;
+  }
 
   customTitle.textContent = `Personaliza: ${selectedProduct.name}`;
   customFields.innerHTML = "";
 
   const name = selectedProduct.name.toLowerCase();
 
-  // FUNDAS
+
+  // FUNDAS NORMALES
+
   if (
     name.includes("funda") &&
     !name.includes("vinil") &&
     !name.includes("sublimada")
   ) {
+
+    // FUNDA PARA IPAD
+
     if (name.includes("ipad")) {
       customFields.innerHTML = `
         <label>Modelo de iPad:</label>
@@ -667,6 +452,9 @@ function openCustomize(productId) {
           <option>Otro modelo</option>
         </select>
       `;
+
+    // FUNDA PARA AIRPODS
+
     } else if (name.includes("airpods")) {
       customFields.innerHTML = `
         <label>Modelo de AirPods:</label>
@@ -681,6 +469,9 @@ function openCustomize(productId) {
           <option>Otro modelo</option>
         </select>
       `;
+
+    // FUNDAS PARA CELULARES
+
     } else {
       customFields.innerHTML = `
         <label>Marca del dispositivo:</label>
@@ -713,6 +504,8 @@ function openCustomize(productId) {
         });
     }
 
+    // COLOR DE LAS FUNDAS
+
     customFields.innerHTML += `
       <label>Color:</label>
       <select id="customColor">
@@ -723,15 +516,21 @@ function openCustomize(productId) {
       </select>
     `;
 
+
   // FUNDAS DE VINIL Y SUBLIMADAS
+
   } else if (name.includes("vinil") || name.includes("sublimada")) {
     customFields.innerHTML = `
       <label>Describe el diseño que deseas:</label>
-      <textarea id="customDesign"
-        placeholder="Escribe los detalles de tu diseño"></textarea>
+      <textarea
+        id="customDesign"
+        placeholder="Escribe los detalles de tu diseño">
+      </textarea>
     `;
 
+
   // MICAS
+
   } else if (name.includes("mica")) {
     customFields.innerHTML = `
       <label>Marca del dispositivo:</label>
@@ -763,15 +562,21 @@ function openCustomize(productId) {
         modelSelect.disabled = !modelos.length;
       });
 
-  // CARGADORES Y CABLES
+
+  // CARGADORES
+
   } else if (name.includes("cargador")) {
     customFields.innerHTML = `
       <label>Modelo del dispositivo:</label>
-      <input type="text" id="customModel"
+      <input
+        type="text"
+        id="customModel"
         placeholder="Ej. iPhone 15, Samsung A54...">
     `;
 
+
   // AUDÍFONOS
+
   } else {
     customFields.innerHTML = `
       <p>Este producto no requiere personalización.</p>
@@ -781,32 +586,39 @@ function openCustomize(productId) {
   customizeModal.classList.remove("hidden");
 }
 
-// CERRAR MODAL
-customClose.addEventListener("click", () => {
+
+// Cerrar ventana
+
+customClose?.addEventListener("click", () => {
   customizeModal.classList.add("hidden");
 });
 
-customizeModal.addEventListener("click", event => {
+customizeModal?.addEventListener("click", event => {
   if (event.target === customizeModal) {
     customizeModal.classList.add("hidden");
   }
 });
 
-// CONFIRMAR PERSONALIZACIÓN
-confirmCustomize.addEventListener("click", () => {
+
+// Confirmar y agregar al carrito
+
+confirmCustomize?.addEventListener("click", () => {
   if (!selectedProduct) return;
 
   const name = selectedProduct.name.toLowerCase();
   let customization = [];
+
+
+  // FUNDAS
 
   if (
     name.includes("funda") &&
     !name.includes("vinil") &&
     !name.includes("sublimada")
   ) {
-    const model = document.getElementById("customModel").value;
-    const color = document.getElementById("customColor").value;
-    const brand = document.getElementById("customBrand")?.value || "";
+    const model = document.getElementById("customModel")?.value;
+    const color = document.getElementById("customColor")?.value;
+    const brand = document.getElementById("customBrand")?.value;
 
     if (!model || !color) {
       alert("Selecciona el modelo y el color.");
@@ -814,7 +626,7 @@ confirmCustomize.addEventListener("click", () => {
     }
 
     if (document.getElementById("customBrand") && !brand) {
-      alert("Selecciona la marca.");
+      alert("Selecciona la marca del dispositivo.");
       return;
     }
 
@@ -823,6 +635,9 @@ confirmCustomize.addEventListener("click", () => {
       `Modelo: ${model}`,
       `Color: ${color}`
     ];
+
+
+  // VINIL Y SUBLIMADAS
 
   } else if (name.includes("vinil") || name.includes("sublimada")) {
     const design = document.getElementById("customDesign").value.trim();
@@ -833,6 +648,9 @@ confirmCustomize.addEventListener("click", () => {
     }
 
     customization = [`Diseño: ${design}`];
+
+
+  // MICAS
 
   } else if (name.includes("mica")) {
     const brand = document.getElementById("customBrand").value;
@@ -848,6 +666,9 @@ confirmCustomize.addEventListener("click", () => {
       `Modelo: ${model}`
     ];
 
+
+  // CARGADORES
+
   } else if (name.includes("cargador")) {
     const model = document.getElementById("customModel").value.trim();
 
@@ -858,6 +679,9 @@ confirmCustomize.addEventListener("click", () => {
 
     customization = [`Modelo: ${model}`];
   }
+
+
+  // AGREGAR PRODUCTO
 
   cart.push({
     ...selectedProduct,
@@ -875,68 +699,167 @@ confirmCustomize.addEventListener("click", () => {
   openCart();
 });
 
-  
-const oldCheckoutButton = document.getElementById("checkoutBtn");
-const newCheckoutButton = oldCheckoutButton.cloneNode(true);
 
-oldCheckoutButton.replaceWith(newCheckoutButton);
+// ==========================================
+// 14. REGISTRAR PEDIDOS Y MÉTODOS DE PAGO
+// ==========================================
 
-newCheckoutButton.addEventListener("click", () => {
+if (checkoutBtn) {
+  checkoutBtn.addEventListener("click", () => {
 
-  if (!cart.length) {
-    alert("Tu carrito está vacío.");
-    return;
-  }
+    if (!cart.length) {
+      alert("Tu carrito está vacío.");
+      return;
+    }
 
-  const selectedPayment = document.querySelector(
-    'input[name="paymentMethod"]:checked'
-  );
+    const selectedPayment = document.querySelector(
+      'input[name="paymentMethod"]:checked'
+    );
 
-  if (!selectedPayment) {
-    alert("Selecciona un método de pago.");
-    return;
-  }
+    if (!selectedPayment) {
+      alert("Selecciona un método de pago.");
+      return;
+    }
 
-  const total = cart.reduce((sum, item) => {
-    return sum + item.price * item.quantity;
-  }, 0);
+    const total = cart.reduce((sum, item) => {
+      return sum + item.price * item.quantity;
+    }, 0);
 
-  const order = {
-    id: Date.now(),
-    products: [...cart],
-    total: total,
-    paymentMethod: selectedPayment.value,
-    status: "Pendiente de pago",
-    date: new Date().toLocaleString("es-MX")
-  };
- 
-  let orders = JSON.parse(
-    localStorage.getItem("tecnoluxxeOrders") || "[]"
-  );
+    const order = {
+      id: Date.now(),
+      products: [...cart],
+      total: total,
+      paymentMethod: selectedPayment.value,
+      status: "Pendiente de pago",
+      date: new Date().toLocaleString("es-MX")
+    };
 
-  orders.push(order);
+    let orders = JSON.parse(
+      localStorage.getItem("tecnoluxxeOrders") || "[]"
+    );
 
-  localStorage.setItem(
-    "tecnoluxxeOrders",
-    JSON.stringify(orders)
-  );
+    orders.push(order);
 
-  cart = [];
+    localStorage.setItem(
+      "tecnoluxxeOrders",
+      JSON.stringify(orders)
+    );
 
-  saveCart();
-  renderCart();
+    cart = [];
 
-  document.querySelectorAll(
-    'input[name="paymentMethod"]'
-  ).forEach(input => input.checked = false);
+    saveCart();
+    renderCart();
 
-  alert(
-    "¡Tu pedido se ha registrado correctamente!\n\n" +
-    "Número de pedido: " + order.id +
-    "\nTotal: $" + total + " MXN" +
-    "\nMétodo de pago: " + order.paymentMethod
-  );
+    document.querySelectorAll(
+      'input[name="paymentMethod"]'
+    ).forEach(input => input.checked = false);
 
-  closeCart();
+    alert(
+      "¡Tu pedido se ha registrado correctamente!\n\n" +
+      "Número de pedido: " + order.id +
+      "\nTotal: $" + total + " MXN" +
+      "\nMétodo de pago: " + order.paymentMethod
+    );
 
+    closeCart();
+  });
+}
+
+
+// ==========================================
+// 15. MENÚ DE NAVEGACIÓN
+// ==========================================
+
+const menuBtn = document.getElementById("menuBtn");
+const nav = document.getElementById("nav");
+
+menuBtn?.addEventListener("click", () => {
+  nav?.classList.toggle("open");
 });
+
+
+// ==========================================
+// 16. INICIO DE SESIÓN DE PRUEBA
+// ==========================================
+
+const loginModal = document.getElementById("loginModal");
+const loginOpen = document.getElementById("loginOpen");
+const loginClose = document.getElementById("loginClose");
+const loginForm = document.getElementById("loginForm");
+const loginMessage = document.getElementById("loginMessage");
+
+loginOpen?.addEventListener("click", () => {
+  loginModal?.classList.remove("hidden");
+});
+
+loginClose?.addEventListener("click", () => {
+  loginModal?.classList.add("hidden");
+});
+
+loginForm?.addEventListener("submit", event => {
+  event.preventDefault();
+
+  const email = document.getElementById("email")?.value;
+
+  if (loginMessage) {
+    loginMessage.textContent =
+      `Sesión de prueba iniciada con ${email}`;
+  }
+});
+
+
+// ==========================================
+// 17. CHAT DE ATENCIÓN
+// ==========================================
+
+const chatOpen = document.getElementById("chatOpen");
+const chatClose = document.getElementById("chatClose");
+const chatBox = document.getElementById("chatBox");
+const chatForm = document.getElementById("chatForm");
+const chatInput = document.getElementById("chatInput");
+const chatMessages = document.getElementById("chatMessages");
+
+chatOpen?.addEventListener("click", () => {
+  chatBox?.classList.remove("hidden");
+});
+
+chatClose?.addEventListener("click", () => {
+  chatBox?.classList.add("hidden");
+});
+
+chatForm?.addEventListener("submit", event => {
+  event.preventDefault();
+
+  const message = chatInput?.value.trim();
+
+  if (!message || !chatMessages) return;
+
+  const userMessage = document.createElement("div");
+  userMessage.className = "user-msg";
+  userMessage.textContent = message;
+
+  chatMessages.appendChild(userMessage);
+
+  chatInput.value = "";
+
+  setTimeout(() => {
+    const botMessage = document.createElement("div");
+
+    botMessage.className = "bot-msg";
+
+    botMessage.textContent =
+      "Gracias por escribirnos. Un asesor revisará tu mensaje.";
+
+    chatMessages.appendChild(botMessage);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }, 450);
+
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+});
+
+
+// ==========================================
+// 18. INICIALIZAR CARRITO
+// ==========================================
+
+renderCart();
