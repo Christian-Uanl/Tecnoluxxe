@@ -800,3 +800,24 @@ footer strong {
     font-size: 12px;
   }
 }
+
+.product-options {
+  margin: 12px 0;
+}
+
+.product-options label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.product-color {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  color: #222;
+  cursor: pointer;
+}
