@@ -45,10 +45,26 @@ function renderProducts(list) {
       <div class="product-info">
         <p>${product.category}</p>
         <h3>${product.name}</h3>
-        <p>$${product.price} MXN</p>
-        <button onclick="addToCart(${product.id})">
-          Agregar al carrito
-        </button>
+<p>$${product.price} MXN</p>
+
+<div class="product-options">
+  <label>Selecciona un color:</label>
+  <select class="product-color" id="color-${product.id}">
+    <option value="">Elegir color</option>
+    <option value="Negro">Negro</option>
+    <option value="Blanco">Blanco</option>
+    <option value="Rosa">Rosa</option>
+    <option value="Azul">Azul</option>
+    <option value="Morado">Morado</option>
+    <option value="Rojo">Rojo</option>
+    <option value="Verde">Verde</option>
+    <option value="Transparente">Transparente</option>
+  </select>
+</div>
+
+<button onclick="addToCart(${product.id})">
+  Agregar al carrito
+</button>
       </div>
     `;
 
@@ -320,10 +336,6 @@ chatForm.addEventListener("submit", event => {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
-// =====================================
-// CATÁLOGOS DE MODELOS Y COLORES
-// =====================================
-
 const catalogoModelos = {
 
   "Apple iPhone": [
@@ -409,10 +421,6 @@ const catalogoModelos = {
 };
 
 
-// =====================================
-// CATÁLOGO DE COLORES
-// =====================================
-
 const catalogoColores = [
   "Transparente / cristal",
   "Negro", "Blanco", "Gris", "Plata", "Dorado", "Champagne",
@@ -425,11 +433,6 @@ const catalogoColores = [
   "Beige", "Crema", "Café", "Chocolate", "Caramelo",
   "Menta", "Turquesa", "Multicolor", "Personalizado"
 ];
-
-
-// =====================================
-// DISEÑOS DE FUNDAS TRANSPARENTES
-// =====================================
 
 const catalogoTransparentes = [
   "TR-01 Transparente total",
@@ -444,10 +447,6 @@ const catalogoTransparentes = [
   "TR-10 Transparente con diseño impreso"
 ];
 
-
-// =====================================
-// AGREGAR OPCIONES A LAS TARJETAS
-// =====================================
 
 function addProductOptions() {
 
@@ -476,8 +475,6 @@ function addProductOptions() {
     ) return;
 
     card.dataset.optionsAdded = "true";
-
-    // FUNDAS LISAS, TRANSPARENTES, IPAD Y AIRPODS
 
     if (esLisa || esTransparente || esIpad || esAirpods) {
 
@@ -596,8 +593,6 @@ function addProductOptions() {
         openCart();
       });
     }
-
-    // PERSONALIZACIÓN DE VINIL Y SUBLIMADAS
 
     if (esVinil || esSublimada) {
 
