@@ -617,6 +617,151 @@ function addProductOptions() {
   });
 }
 
+
+const customizeModal = document.getElementById("customizeModal");
+const customTitle = document.getElementById("customTitle");
+const customFields = document.getElementById("customFields");
+const customClose = document.getElementById("customClose");
+const confirmCustomize = document.getElementById("confirmCustomize");
+
+let selectedProduct = null;
+
+function openCustomize(productId) {
+  selectedProduct = products.find(p => p.id === productId);
+
+  if (!selectedProduct) return;
+
+  customTitle.textContent = `Personaliza: ${selectedProduct.name}`;
+  customFields.innerHTML = "";
+
+  const name = selectedProduct.name.toLowerCase();
+
+  if (name.includes("funda") && !name.includes("vinil") && !name.includes("sublimada")) {
+    customFields.innerHTML += `
+      <label>Marca del dispositivo:</label>
+      <select id="customBrand">
+        <option value="">Selecciona una marca</option>
+        ${Object.keys(catalogoModelos).map(marca =>
+          `<option value="${marca}">${marca}</option>`
+        ).join("")}
+      </select>
+
+      <label>Modelo:</label>
+      <select id="customModel" disabled>
+        <option value="">Primero selecciona una marca</option>
+      </select>
+
+      <label>Color:</label>
+      <select id="customColor">
+        <option value="">Selecciona un color</option>
+        ${catalogoColores.map(color =>
+          `<option value="${color}">${color}</option>`
+        ).join("")}
+      </select>
+    `;
+
+    const brandSelect = document.getElementById("customBrand");
+    const modelSelect = document.getElementById("customModel");
+
+    brandSelect.addEventListener("change", () => {
+      const modelos = catalogoModelos[brandSelect.value] || [];
+
+      modelSelect.innerHTML = `
+        <option value="">Selecciona un modelo</option>
+        ${modelos.map(modelo =>
+          `<option value="${modelo}">${modelo}</option>`
+        ).join("")}
+      `;
+
+      modelSelect.disabled = !modelos.length;
+    });
+
+  } else if (name.includes("vinil") || name.includes("sublimada")) {
+    customFields.innerHTML = `
+      <label>Describe el diseño que deseas:</label>
+      <textarea id="customDesign" placeholder="Escribe los detalles de tu diseño"></textarea>
+    `;
+
+  } else {
+    customFields.innerHTML = `
+      <label>Color:</label>
+      <select id="customColor">
+        <option value="">Selecciona un color</option>
+        ${catalogoColores.map(color =>
+          `<option value="${color}">${color}</option>`
+        ).join("")}
+      </select>
+    `;
+  }
+
+  customizeModal.classList.remove("hidden");
+}
+
+customClose.addEventListener("click", () => {
+  customizeModal.classList.add("hidden");
+});
+
+customizeModal.addEventListener("click", (event) => {
+  if (event.target === customizeModal) {
+    customizeModal.classList.add("hidden");
+  }
+});
+
+confirmCustomize.addEventListener("click", () => {
+  if (!selectedProduct) return;
+
+  const name = selectedProduct.name.toLowerCase();
+  let customization = [];
+
+  if (name.includes("funda") && !name.includes("vinil") && !name.includes("sublimada")) {
+    const brand = document.getElementById("customBrand").value;
+    const model = document.getElementById("customModel").value;
+    const color = document.getElementById("customColor").value;
+
+    if (!brand || !model || !color) {
+      alert("Selecciona la marca, el modelo y el color.");
+      return;
+    }
+
+    customization = [`Marca: ${brand}`, `Modelo: ${model}`, `Color: ${color}`];
+
+  } else if (name.includes("vinil") || name.includes("sublimada")) {
+    const design = document.getElementById("customDesign").value.trim();
+
+    if (!design) {
+      alert("Describe el diseño que deseas.");
+      return;
+    }
+
+    customization = [`Diseño: ${design}`];
+
+  } else {
+    const colorSelect = document.getElementById("customColor");
+    const color = colorSelect ? colorSelect.value : "";
+
+    if (colorSelect && !color) {
+      alert("Selecciona un color.");
+      return;
+    }
+
+    if (color) customization = [`Color: ${color}`];
+  }
+
+  cart.push({
+    ...selectedProduct,
+    cartItemId: Date.now() + Math.random(),
+    quantity: 1,
+    customization: customization.join(" | ")
+  });
+
+  saveCart();
+  renderCart();
+
+  customizeModal.classList.add("hidden");
+  selectedProduct = null;
+});
+
+  
 const oldCheckoutButton = document.getElementById("checkoutBtn");
 const newCheckoutButton = oldCheckoutButton.cloneNode(true);
 
