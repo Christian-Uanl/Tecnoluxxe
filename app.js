@@ -626,6 +626,7 @@ function addProductOptions() {
 }
 
 
+
 const customizeModal = document.getElementById("customizeModal");
 const customTitle = document.getElementById("customTitle");
 const customFields = document.getElementById("customFields");
@@ -634,8 +635,6 @@ const confirmCustomize = document.getElementById("confirmCustomize");
 
 let selectedProduct = null;
 
-function openCustomize(productId) {
-  
 function openCustomize(productId) {
   selectedProduct = products.find(p => p.id === productId);
 
@@ -646,7 +645,7 @@ function openCustomize(productId) {
 
   const name = selectedProduct.name.toLowerCase();
 
-  // FUNDAS NORMALES
+  // FUNDAS
   if (
     name.includes("funda") &&
     !name.includes("vinil") &&
@@ -724,7 +723,7 @@ function openCustomize(productId) {
       </select>
     `;
 
-  // FUNDAS DE DISEÑO
+  // FUNDAS DE VINIL Y SUBLIMADAS
   } else if (name.includes("vinil") || name.includes("sublimada")) {
     customFields.innerHTML = `
       <label>Describe el diseño que deseas:</label>
@@ -764,6 +763,7 @@ function openCustomize(productId) {
         modelSelect.disabled = !modelos.length;
       });
 
+  // CARGADORES Y CABLES
   } else if (name.includes("cargador")) {
     customFields.innerHTML = `
       <label>Modelo del dispositivo:</label>
@@ -771,6 +771,7 @@ function openCustomize(productId) {
         placeholder="Ej. iPhone 15, Samsung A54...">
     `;
 
+  // AUDÍFONOS
   } else {
     customFields.innerHTML = `
       <p>Este producto no requiere personalización.</p>
@@ -780,55 +781,18 @@ function openCustomize(productId) {
   customizeModal.classList.remove("hidden");
 }
 
-    const brandSelect = document.getElementById("customBrand");
-    const modelSelect = document.getElementById("customModel");
-
-    brandSelect.addEventListener("change", () => {
-      const modelos = catalogoModelos[brandSelect.value] || [];
-
-      modelSelect.innerHTML = `
-        <option value="">Selecciona un modelo</option>
-        ${modelos.map(modelo =>
-          `<option value="${modelo}">${modelo}</option>`
-        ).join("")}
-      `;
-
-      modelSelect.disabled = !modelos.length;
-    });
-
-  } else if (name.includes("vinil") || name.includes("sublimada")) {
-    customFields.innerHTML = `
-      <label>Describe el diseño que deseas:</label>
-      <textarea id="customDesign" placeholder="Escribe los detalles de tu diseño"></textarea>
-    `;
-
-  } else {
-    customFields.innerHTML = `
-      <label>Color:</label>
-      <select id="customColor">
-        <option value="">Selecciona un color</option>
-        ${catalogoColores.map(color =>
-          `<option value="${color}">${color}</option>`
-        ).join("")}
-      </select>
-    `;
-  }
-
-  customizeModal.classList.remove("hidden");
-}
-
+// CERRAR MODAL
 customClose.addEventListener("click", () => {
   customizeModal.classList.add("hidden");
 });
 
-customizeModal.addEventListener("click", (event) => {
+customizeModal.addEventListener("click", event => {
   if (event.target === customizeModal) {
     customizeModal.classList.add("hidden");
   }
 });
-  
-confirmCustomize.addEventListener("click", () => {
- 
+
+// CONFIRMAR PERSONALIZACIÓN
 confirmCustomize.addEventListener("click", () => {
   if (!selectedProduct) return;
 
@@ -840,18 +804,17 @@ confirmCustomize.addEventListener("click", () => {
     !name.includes("vinil") &&
     !name.includes("sublimada")
   ) {
-    const model = document.getElementById("customModel")?.value;
-    const color = document.getElementById("customColor")?.value;
+    const model = document.getElementById("customModel").value;
+    const color = document.getElementById("customColor").value;
+    const brand = document.getElementById("customBrand")?.value || "";
 
     if (!model || !color) {
       alert("Selecciona el modelo y el color.");
       return;
     }
 
-    const brand = document.getElementById("customBrand")?.value;
-
     if (document.getElementById("customBrand") && !brand) {
-      alert("Selecciona la marca del dispositivo.");
+      alert("Selecciona la marca.");
       return;
     }
 
@@ -880,71 +843,11 @@ confirmCustomize.addEventListener("click", () => {
       return;
     }
 
-    customization = [`Marca: ${brand}`, `Modelo: ${model}`];
-
-  } else if (name.includes("cargador")) {
-    const model = document.getElementById("customModel").value.trim();
-
-    if (!model) {
-      alert("Escribe el modelo de tu dispositivo.");
-      return;
-    }
-
-    customization = [`Modelo: ${model}`];
-  }
-
-  cart.push({
-    ...selectedProduct,
-    cartItemId: Date.now() + Math.random(),
-    quantity: 1,
-    customization: customization.join(" | ")
-  });
-
-  saveCart();
-  renderCart();
-
-  customizeModal.classList.add("hidden");
-  selectedProduct = null;
-
-  openCart();
-});
-
-    }
-
-    const brand = document.getElementById("customBrand")?.value;
-
-    if (document.getElementById("customBrand") && !brand) {
-      alert("Selecciona la marca del dispositivo.");
-      return;
-    }
-
     customization = [
-      ...(brand ? [`Marca: ${brand}`] : []),
-      `Modelo: ${model}`,
-      `Color: ${color}`
+      `Marca: ${brand}`,
+      `Modelo: ${model}`
     ];
 
-  } else if (name.includes("vinil") || name.includes("sublimada")) {
-    const design = document.getElementById("customDesign").value.trim();
-
-    if (!design) {
-      alert("Describe el diseño que deseas.");
-      return;
-    }
-
-    customization = [`Diseño: ${design}`];
-
-  } else if (name.includes("mica")) {
-    const brand = document.getElementById("customBrand").value;
-    const model = document.getElementById("customModel").value;
-
-    if (!brand || !model) {
-      alert("Selecciona la marca y el modelo.");
-      return;
-    }
-
-    customization = [`Marca: ${brand}`, `Modelo: ${model}`];
-
   } else if (name.includes("cargador")) {
     const model = document.getElementById("customModel").value.trim();
 
@@ -970,46 +873,6 @@ confirmCustomize.addEventListener("click", () => {
   selectedProduct = null;
 
   openCart();
-});
-
-    }
-
-    customization = [`Marca: ${brand}`, `Modelo: ${model}`, `Color: ${color}`];
-
-  } else if (name.includes("vinil") || name.includes("sublimada")) {
-    const design = document.getElementById("customDesign").value.trim();
-
-    if (!design) {
-      alert("Describe el diseño que deseas.");
-      return;
-    }
-
-    customization = [`Diseño: ${design}`];
-
-  } else {
-    const colorSelect = document.getElementById("customColor");
-    const color = colorSelect ? colorSelect.value : "";
-
-    if (colorSelect && !color) {
-      alert("Selecciona un color.");
-      return;
-    }
-
-    if (color) customization = [`Color: ${color}`];
-  }
-
-  cart.push({
-    ...selectedProduct,
-    cartItemId: Date.now() + Math.random(),
-    quantity: 1,
-    customization: customization.join(" | ")
-  });
-
-  saveCart();
-  renderCart();
-
-  customizeModal.classList.add("hidden");
-  selectedProduct = null;
 });
 
   
