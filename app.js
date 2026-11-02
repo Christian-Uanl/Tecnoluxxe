@@ -62,7 +62,7 @@ function renderProducts(list) {
   </select>
 </div>
 
-<button onclick="addToCart(${product.id})">
+<button onclick="addToCart(${product.id}, document.getElementById('color-${product.id}').value)">
   Agregar al carrito
 </button>
       </div>
