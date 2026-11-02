@@ -20,7 +20,6 @@ const productsGrid = document.getElementById("productsGrid");
 const searchInput = document.getElementById("searchInput");
 
 let cart = JSON.parse(localStorage.getItem("tecnoluxxeCart") || "[]");
-function renderProducts(list) {
 
 function renderProducts(list) {
   productsGrid.innerHTML = "";
