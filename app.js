@@ -18,37 +18,32 @@ const searchInput = document.getElementById("searchInput");
 
 let cart = JSON.parse(localStorage.getItem("tecnoluxxeCart") || "[]");
 
-function renderProducts(list) {
-  productsGrid.innerHTML = "";
+function renderProducts(list) 
+productsGrid.innerHTML = "";
 
-  if (!list.length) {
+if (!list.length) {
     productsGrid.innerHTML = "<p>No se encontraron productos.</p>";
     return;
-  }
+}
 
-  list.forEach(product => {
+list.forEach(product => {
     const card = document.createElement("article");
     card.className = "product-card";
 
-    card.innerHTML = `
-      <div class="product-img">
-        <img src="${product.icon}" alt="${product.name}">
-      </div>
+    const productImage = product.icon.startsWith("img/")
+        ? <img src="${product.icon}" alt="${product.name}">
+        : ${product.icon};
 
-      <div class="product-info">
-        <p>${product.category}</p>
-        <h3>${product.name}</h3>
+    card.innerHTML = `
+        ${productImage}
+        <h3>${product.category}</h3>
+        <h2>${product.name}</h2>
         <p>$${product.price} MXN</p>
-        <button onclick="addToCart(${product.id})">
-          Agregar al carrito
-        </button>
-      </div>
+        <button>Agregar al carrito</button>
     `;
 
     productsGrid.appendChild(card);
-  });
-}
-
+});
 renderProducts(products);
 
 searchInput.addEventListener("input", () => {
