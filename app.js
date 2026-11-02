@@ -110,18 +110,27 @@ function saveCart() {
   localStorage.setItem("tecnoluxxeCart", JSON.stringify(cart));
 }
 
-function addToCart(productId) {
+
+function addToCart(productId, selectedColor) {
   const product = products.find(item => item.id === productId);
 
   if (!product) return;
 
-  const existing = cart.find(item => item.id === productId);
+  if (!selectedColor) {
+    alert("Selecciona un color antes de agregar el producto.");
+    return;
+  }
+
+  const existing = cart.find(item =>
+    item.id === productId && item.color === selectedColor
+  );
 
   if (existing) {
     existing.quantity += 1;
   } else {
     cart.push({
       ...product,
+      color: selectedColor,
       quantity: 1
     });
   }
