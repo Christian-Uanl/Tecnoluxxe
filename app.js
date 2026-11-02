@@ -51,7 +51,7 @@ function renderProducts(list) {
 
     productsGrid.appendChild(card);
   });
-}
+} 
 renderProducts(products);
 
 searchInput.addEventListener("input", () => {
