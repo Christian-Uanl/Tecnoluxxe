@@ -17,9 +17,8 @@ const productsGrid = document.getElementById("productsGrid");
 const searchInput = document.getElementById("searchInput");
 
 let cart = JSON.parse(localStorage.getItem("tecnoluxxeCart") || "[]");
-
-function renderProducts(list) 
- productsGrid.innerHTML = "";
+function renderProducts(list) {
+  productsGrid.innerHTML = "";
 
   if (!list.length) {
     productsGrid.innerHTML = "<p>No se encontraron productos.</p>";
@@ -30,11 +29,16 @@ function renderProducts(list)
     const card = document.createElement("article");
     card.className = "product-card";
 
+    const isImage = product.icon.startsWith("img/");
+
+    const productImage = isImage
+      ? `<img src="${product.icon}" alt="${product.name}">`
+      : `<span style="font-size: 5rem;">${product.icon}</span>`;
+
     card.innerHTML = `
       <div class="product-img">
-        <img src="${product.icon}" alt="${product.name}">
+        ${productImage}
       </div>
-
       <div class="product-info">
         <p>${product.category}</p>
         <h3>${product.name}</h3>
