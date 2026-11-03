@@ -1,3 +1,4 @@
+
 const products = [
   { id: 1, name: "Funda lisa", category: "Fundas", price: 150, icon: "img/funda lisas.webp" },
   { id: 2, name: "Funda transparente", category: "Fundas", price: 150, icon: "img/fundas transparentes.webp" },
@@ -14,7 +15,6 @@ const products = [
 ];
 
 const catalogoModelos = {
-
   "Apple iPhone": [
     "iPhone X", "iPhone XR", "iPhone XS", "iPhone XS Max",
     "iPhone 11", "iPhone 11 Pro", "iPhone 11 Pro Max",
@@ -109,7 +109,6 @@ const catalogoColores = [
   "Beige", "Crema", "Café", "Chocolate", "Caramelo",
   "Menta", "Turquesa", "Multicolor", "Personalizado"
 ];
-
 
 const productsGrid = document.getElementById("productsGrid");
 const searchInput = document.getElementById("searchInput");
@@ -240,7 +239,6 @@ function renderCart() {
 
     return `
       <div class="cart-item">
-
         <div class="cart-item-icon">
           ${
             isImage
@@ -256,9 +254,7 @@ function renderCart() {
 
           <div class="cart-controls">
             <button onclick="changeQuantity(${item.cartItemId}, -1)">−</button>
-
             <strong>${item.quantity}</strong>
-
             <button onclick="changeQuantity(${item.cartItemId}, 1)">+</button>
           </div>
         </div>
@@ -269,7 +265,6 @@ function renderCart() {
           title="Eliminar">
           🗑️
         </button>
-
       </div>
     `;
   }).join("");
@@ -358,8 +353,6 @@ ${design || "Quisiera recibir asesoría para elegir un diseño."}
   window.open(url, "_blank");
 }
 
-
-
 function openCustomize(productId) {
   selectedProduct = products.find(p => p.id === productId);
 
@@ -375,6 +368,7 @@ function openCustomize(productId) {
 
   const name = selectedProduct.name.toLowerCase();
 
+  // FUNDAS NORMALES
   if (
     name.includes("funda") &&
     !name.includes("vinil") &&
@@ -382,7 +376,6 @@ function openCustomize(productId) {
   ) {
 
     if (name.includes("ipad")) {
-
       customFields.innerHTML = `
         <label>Modelo de iPad:</label>
         <select id="customModel">
@@ -400,7 +393,6 @@ function openCustomize(productId) {
       `;
 
     } else if (name.includes("airpods")) {
-
       customFields.innerHTML = `
         <label>Modelo de AirPods:</label>
         <select id="customModel">
@@ -414,52 +406,55 @@ function openCustomize(productId) {
           <option>Otro modelo</option>
         </select>
       `;
-} else {
 
-  customFields.innerHTML = `
-    <label>Marca del dispositivo:</label>
-    <select id="customBrand" required>
-      <option value="">Selecciona una marca</option>
-      ${Object.keys(catalogoModelos).map(marca =>
-        `<option value="${marca}">${marca}</option>`
-      ).join("")}
-    </select>
+    } else {
+      customFields.innerHTML = `
+        <label>Marca del dispositivo:</label>
+        <select id="customBrand">
+          <option value="">Selecciona una marca</option>
+          ${Object.keys(catalogoModelos).map(marca =>
+            `<option value="${marca}">${marca}</option>`
+          ).join("")}
+        </select>
 
-    <label>Modelo:</label>
-    <select id="customModel" disabled required>
-      <option value="">Primero selecciona una marca</option>
-    </select>
+        <label>Modelo:</label>
+        <select id="customModel" disabled>
+          <option value="">Primero selecciona una marca</option>
+        </select>
+      `;
+    }
 
-    <label>Color:</label>
-    <select id="customColor" required>
-      <option value="">Selecciona un color</option>
-      ${catalogoColores.map(color =>
-        `<option value="${color}">${color}</option>`
-      ).join("")}
-    </select>
-  `;
-
-  const brandSelect = document.getElementById("customBrand");
-  const modelSelect = document.getElementById("customModel");
-
-  brandSelect.addEventListener("change", () => {
-    const modelos = catalogoModelos[brandSelect.value] || [];
-
-    modelSelect.innerHTML = `
-      <option value="">Selecciona un modelo</option>
-      ${modelos.map(modelo =>
-        `<option value="${modelo}">${modelo}</option>`
-      ).join("")}
+    // El color se agrega antes de asignar los eventos.
+    customFields.innerHTML += `
+      <label>Color:</label>
+      <select id="customColor">
+        <option value="">Selecciona un color</option>
+        ${catalogoColores.map(color =>
+          `<option value="${color}">${color}</option>`
+        ).join("")}
+      </select>
     `;
 
-    modelSelect.disabled = modelos.length === 0;
-  });
+    // Evento para cargar los modelos de cada marca.
+    const brandSelect = document.getElementById("customBrand");
+    const modelSelect = document.getElementById("customModel");
 
-}
+    if (brandSelect && modelSelect) {
+      brandSelect.addEventListener("change", event => {
+        const modelos = catalogoModelos[event.target.value] || [];
 
+        modelSelect.innerHTML = `
+          <option value="">Selecciona un modelo</option>
+          ${modelos.map(modelo =>
+            `<option value="${modelo}">${modelo}</option>`
+          ).join("")}
+        `;
 
-    `;
-    
+        modelSelect.disabled = !modelos.length;
+      });
+    }
+
+  // FUNDAS DE VINIL Y SUBLIMADAS
   } else if (name.includes("vinil") || name.includes("sublimada")) {
 
     customFields.innerHTML = `
@@ -484,8 +479,9 @@ function openCustomize(productId) {
     `;
 
     document.getElementById("whatsappCustomizeBtn")
-      .addEventListener("click", contactWhatsApp);
+      ?.addEventListener("click", contactWhatsApp);
 
+  // MICAS
   } else if (name.includes("mica")) {
 
     customFields.innerHTML = `
@@ -503,21 +499,23 @@ function openCustomize(productId) {
       </select>
     `;
 
-    document.getElementById("customBrand")
-      .addEventListener("change", event => {
-        const modelos = catalogoModelos[event.target.value] || [];
-        const modelSelect = document.getElementById("customModel");
+    const brandSelect = document.getElementById("customBrand");
+    const modelSelect = document.getElementById("customModel");
 
-        modelSelect.innerHTML = `
-          <option value="">Selecciona un modelo</option>
-          ${modelos.map(modelo =>
-            `<option value="${modelo}">${modelo}</option>`
-          ).join("")}
-        `;
+    brandSelect?.addEventListener("change", event => {
+      const modelos = catalogoModelos[event.target.value] || [];
 
-        modelSelect.disabled = !modelos.length;
-      });
+      modelSelect.innerHTML = `
+        <option value="">Selecciona un modelo</option>
+        ${modelos.map(modelo =>
+          `<option value="${modelo}">${modelo}</option>`
+        ).join("")}
+      `;
 
+      modelSelect.disabled = !modelos.length;
+    });
+
+  // CARGADORES
   } else if (name.includes("cargador")) {
 
     customFields.innerHTML = `
@@ -528,6 +526,7 @@ function openCustomize(productId) {
         placeholder="Ej. iPhone 15, Samsung A54...">
     `;
 
+  // OTROS PRODUCTOS
   } else {
 
     customFields.innerHTML = `
@@ -537,7 +536,6 @@ function openCustomize(productId) {
 
   customizeModal.classList.remove("hidden");
 }
-
 
 customClose?.addEventListener("click", () => {
   customizeModal.classList.add("hidden");
@@ -555,6 +553,7 @@ confirmCustomize?.addEventListener("click", () => {
   const name = selectedProduct.name.toLowerCase();
   let customization = [];
 
+  // FUNDAS NORMALES
   if (
     name.includes("funda") &&
     !name.includes("vinil") &&
@@ -564,13 +563,13 @@ confirmCustomize?.addEventListener("click", () => {
     const color = document.getElementById("customColor")?.value;
     const brand = document.getElementById("customBrand")?.value;
 
-    if (!model || !color) {
-      alert("Selecciona el modelo y el color.");
+    if (document.getElementById("customBrand") && !brand) {
+      alert("Selecciona la marca del dispositivo.");
       return;
     }
 
-    if (document.getElementById("customBrand") && !brand) {
-      alert("Selecciona la marca del dispositivo.");
+    if (!model || !color) {
+      alert("Selecciona el modelo y el color.");
       return;
     }
 
@@ -580,8 +579,9 @@ confirmCustomize?.addEventListener("click", () => {
       `Color: ${color}`
     ];
 
+  // VINIL Y SUBLIMADAS
   } else if (name.includes("vinil") || name.includes("sublimada")) {
-    const design = document.getElementById("customDesign").value.trim();
+    const design = document.getElementById("customDesign")?.value.trim();
 
     if (!design) {
       alert("Describe el diseño que deseas.");
@@ -590,9 +590,10 @@ confirmCustomize?.addEventListener("click", () => {
 
     customization = [`Diseño: ${design}`];
 
+  // MICAS
   } else if (name.includes("mica")) {
-    const brand = document.getElementById("customBrand").value;
-    const model = document.getElementById("customModel").value;
+    const brand = document.getElementById("customBrand")?.value;
+    const model = document.getElementById("customModel")?.value;
 
     if (!brand || !model) {
       alert("Selecciona la marca y el modelo.");
@@ -604,8 +605,9 @@ confirmCustomize?.addEventListener("click", () => {
       `Modelo: ${model}`
     ];
 
+  // CARGADORES
   } else if (name.includes("cargador")) {
-    const model = document.getElementById("customModel").value.trim();
+    const model = document.getElementById("customModel")?.value.trim();
 
     if (!model) {
       alert("Escribe el modelo de tu dispositivo.");
