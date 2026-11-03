@@ -414,41 +414,48 @@ function openCustomize(productId) {
           <option>Otro modelo</option>
         </select>
       `;
+} else {
 
-      } else {
+  customFields.innerHTML = `
+    <label>Marca del dispositivo:</label>
+    <select id="customBrand" required>
+      <option value="">Selecciona una marca</option>
+      ${Object.keys(catalogoModelos).map(marca =>
+        `<option value="${marca}">${marca}</option>`
+      ).join("")}
+    </select>
 
-      customFields.innerHTML = `
-        <label>Marca del dispositivo:</label>
-        <select id="customBrand">
-          <option value="">Selecciona una marca</option>
-          ${Object.keys(catalogoModelos).map(marca =>
-            `<option value="${marca}">${marca}</option>`
-          ).join("")}
-        </select>
+    <label>Modelo:</label>
+    <select id="customModel" disabled required>
+      <option value="">Primero selecciona una marca</option>
+    </select>
 
-        <label>Modelo:</label>
-        <select id="customModel" disabled>
-          <option value="">Primero selecciona una marca</option>
-        </select>
-      `;
+    <label>Color:</label>
+    <select id="customColor" required>
+      <option value="">Selecciona un color</option>
+      ${catalogoColores.map(color =>
+        `<option value="${color}">${color}</option>`
+      ).join("")}
+    </select>
+  `;
 
-      const brandSelect = document.getElementById("customBrand");
-      const modelSelect = document.getElementById("customModel");
+  const brandSelect = document.getElementById("customBrand");
+  const modelSelect = document.getElementById("customModel");
 
-      brandSelect.addEventListener("change", () => {
-        const modelos = catalogoModelos[brandSelect.value] || [];
+  brandSelect.addEventListener("change", () => {
+    const modelos = catalogoModelos[brandSelect.value] || [];
 
-        modelSelect.innerHTML = `
-          <option value="">Selecciona un modelo</option>
-          ${modelos.map(modelo =>
-            `<option value="${modelo}">${modelo}</option>`
-          ).join("")}
-        `;
+    modelSelect.innerHTML = `
+      <option value="">Selecciona un modelo</option>
+      ${modelos.map(modelo =>
+        `<option value="${modelo}">${modelo}</option>`
+      ).join("")}
+    `;
 
-        modelSelect.disabled = modelos.length === 0;
-      });
-    }
+    modelSelect.disabled = modelos.length === 0;
+  });
 
+}
     customFields.innerHTML += `
       <label>Color:</label>
       <select id="customColor">
