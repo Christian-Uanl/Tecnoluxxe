@@ -459,7 +459,7 @@ function openCustomize(productId) {
       </select>
     `;
     
-  else if (name.includes("vinil") || name.includes("sublimada")) {
+  } else if (name.includes("vinil") || name.includes("sublimada")) {
 
     customFields.innerHTML = `
       <label>Describe el diseño que deseas:</label>
