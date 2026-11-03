@@ -415,55 +415,38 @@ function openCustomize(productId) {
         </select>
       `;
 
-   } else {
+      } else {
 
-  customFields.innerHTML = `
-    <label>Marca del dispositivo:</label>
-    <select id="customBrand">
-      <option value="">Selecciona una marca</option>
-      ${Object.keys(catalogoModelos).map(marca =>
-        `<option value="${marca}">${marca}</option>`
-      ).join("")}
-    </select>
+      customFields.innerHTML = `
+        <label>Marca del dispositivo:</label>
+        <select id="customBrand">
+          <option value="">Selecciona una marca</option>
+          ${Object.keys(catalogoModelos).map(marca =>
+            `<option value="${marca}">${marca}</option>`
+          ).join("")}
+        </select>
 
-    <label>Modelo:</label>
-    <select id="customModel" disabled>
-      <option value="">Primero selecciona una marca</option>
-    </select>
-  `;
+        <label>Modelo:</label>
+        <select id="customModel" disabled>
+          <option value="">Primero selecciona una marca</option>
+        </select>
+      `;
 
-  const brandSelect = document.getElementById("customBrand");
-  const modelSelect = document.getElementById("customModel");
+      const brandSelect = document.getElementById("customBrand");
+      const modelSelect = document.getElementById("customModel");
 
-  brandSelect.addEventListener("change", () => {
-    const marcaSeleccionada = brandSelect.value;
-    const modelos = catalogoModelos[marcaSeleccionada] || [];
+      brandSelect.addEventListener("change", () => {
+        const modelos = catalogoModelos[brandSelect.value] || [];
 
-    modelSelect.innerHTML = `
-      <option value="">Selecciona un modelo</option>
-      ${modelos.map(modelo =>
-        `<option value="${modelo}">${modelo}</option>`
-      ).join("")}
-    `;
+        modelSelect.innerHTML = `
+          <option value="">Selecciona un modelo</option>
+          ${modelos.map(modelo =>
+            `<option value="${modelo}">${modelo}</option>`
+          ).join("")}
+        `;
 
-    modelSelect.disabled = modelos.length === 0;
-  });
-}
-
-      document.getElementById("customBrand")
-        .addEventListener("change", event => {
-          const modelos = catalogoModelos[event.target.value] || [];
-          const modelSelect = document.getElementById("customModel");
-
-          modelSelect.innerHTML = `
-            <option value="">Selecciona un modelo</option>
-            ${modelos.map(modelo =>
-              `<option value="${modelo}">${modelo}</option>`
-            ).join("")}
-          `;
-
-          modelSelect.disabled = !modelos.length;
-        });
+        modelSelect.disabled = modelos.length === 0;
+      });
     }
 
     customFields.innerHTML += `
@@ -475,8 +458,8 @@ function openCustomize(productId) {
         ).join("")}
       </select>
     `;
-
-  } else if (name.includes("vinil") || name.includes("sublimada")) {
+    
+  else if (name.includes("vinil") || name.includes("sublimada")) {
 
     customFields.innerHTML = `
       <label>Describe el diseño que deseas:</label>
