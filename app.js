@@ -456,14 +456,8 @@ function openCustomize(productId) {
   });
 
 }
-    customFields.innerHTML += `
-      <label>Color:</label>
-      <select id="customColor">
-        <option value="">Selecciona un color</option>
-        ${catalogoColores.map(color =>
-          `<option value="${color}">${color}</option>`
-        ).join("")}
-      </select>
+
+
     `;
     
   } else if (name.includes("vinil") || name.includes("sublimada")) {
