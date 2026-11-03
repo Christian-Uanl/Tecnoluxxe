@@ -415,22 +415,40 @@ function openCustomize(productId) {
         </select>
       `;
 
-    } else {
+   } else {
 
-      customFields.innerHTML = `
-        <label>Marca del dispositivo:</label>
-        <select id="customBrand">
-          <option value="">Selecciona una marca</option>
-          ${Object.keys(catalogoModelos).map(marca =>
-            `<option value="${marca}">${marca}</option>`
-          ).join("")}
-        </select>
+  customFields.innerHTML = `
+    <label>Marca del dispositivo:</label>
+    <select id="customBrand">
+      <option value="">Selecciona una marca</option>
+      ${Object.keys(catalogoModelos).map(marca =>
+        `<option value="${marca}">${marca}</option>`
+      ).join("")}
+    </select>
 
-        <label>Modelo:</label>
-        <select id="customModel" disabled>
-          <option value="">Primero selecciona una marca</option>
-        </select>
-      `;
+    <label>Modelo:</label>
+    <select id="customModel" disabled>
+      <option value="">Primero selecciona una marca</option>
+    </select>
+  `;
+
+  const brandSelect = document.getElementById("customBrand");
+  const modelSelect = document.getElementById("customModel");
+
+  brandSelect.addEventListener("change", () => {
+    const marcaSeleccionada = brandSelect.value;
+    const modelos = catalogoModelos[marcaSeleccionada] || [];
+
+    modelSelect.innerHTML = `
+      <option value="">Selecciona un modelo</option>
+      ${modelos.map(modelo =>
+        `<option value="${modelo}">${modelo}</option>`
+      ).join("")}
+    `;
+
+    modelSelect.disabled = modelos.length === 0;
+  });
+}
 
       document.getElementById("customBrand")
         .addEventListener("change", event => {
