@@ -137,28 +137,87 @@
     </form>
   </aside>
 
-  <div class="modal hidden" id="loginModal">
-    <div class="modal-card">
-      <button class="close-modal" id="loginClose">×</button>
-      <p class="eyebrow">CUENTA</p>
-      <h2>Iniciar sesión</h2>
+ 
+<div class="modal hidden" id="loginModal">
+  <div class="modal-card">
+    <button class="close-modal" id="loginClose" type="button">×</button>
 
+    <p class="eyebrow">CUENTA TECNOLUXXE</p>
+
+    <div id="loginView">
+      <h2>Bienvenido de nuevo</h2>
       <form id="loginForm">
-        <label>
-          Correo
-          <input type="email" id="email" placeholder="correo@ejemplo.com" required />
+        <label>Correo electrónico
+          <input type="email" id="email" required>
         </label>
-
-        <label>
-          Contraseña
-          <input type="password" id="password" placeholder="••••••••" required />
+        <label>Contraseña
+          <input type="password" id="password" required>
         </label>
-
-        <button class="primary-btn full" type="submit">Entrar</button>
+        <button class="primary-btn full" type="submit">
+          Iniciar sesión
+        </button>
         <p class="form-message" id="loginMessage"></p>
       </form>
+      <p>¿No tienes cuenta?
+        <button type="button" class="text-btn" id="showRegister">
+          Crear cuenta
+        </button>
+      </p>
+    </div>
+
+    <div id="registerView" class="hidden">
+      <h2>Crear cuenta</h2>
+      <form id="registerForm">
+        <label>Nombre completo
+          <input type="text" id="registerName" required>
+        </label>
+        <label>Correo electrónico
+          <input type="email" id="registerEmail" required>
+        </label>
+        <label>Contraseña
+          <input type="password" id="registerPassword"
+                 minlength="8" required>
+        </label>
+        <button class="primary-btn full" type="submit">
+          Registrarme
+        </button>
+        <p class="form-message" id="registerMessage"></p>
+      </form>
+      <p>¿Ya tienes cuenta?
+        <button type="button" class="text-btn" id="showLogin">
+          Iniciar sesión
+        </button>
+      </p>
     </div>
   </div>
+</div>
+
+<section class="section admin-dashboard hidden" id="adminDashboard">
+  <p class="eyebrow">GESTIÓN INTERNA</p>
+  <h2>Panel de administración</h2>
+  <p>Bienvenido, <strong id="adminName"></strong></p>
+
+  <div class="admin-stats">
+    <div class="admin-stat">
+      <span>Usuarios registrados</span>
+      <strong id="userCount">0</strong>
+    </div>
+  </div>
+
+  <h3>Usuarios y empleados</h3>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Rol</th>
+        </tr>
+      </thead>
+      <tbody id="usersTable"></tbody>
+    </table>
+  </div>
+</section>
+
 
   <footer>
     <strong>Tecnoluxxe</strong>
