@@ -633,8 +633,9 @@ confirmCustomize?.addEventListener("click", () => {
   openCart();
 });
 
+
 if (checkoutBtn) {
-  checkoutBtn.addEventListener("click", () => {
+  checkoutBtn.addEventListener("click", async () => {
 
     if (!cart.length) {
       alert("Tu carrito está vacío.");
@@ -650,49 +651,80 @@ if (checkoutBtn) {
       return;
     }
 
-    const total = cart.reduce((sum, item) => {
-      return sum + item.price * item.quantity;
-    }, 0);
+    // Verificar sesión
+    const { data: sessionData, error: sessionError } =
+      await supabaseClient.auth.getSession();
 
-    const order = {
-      id: Date.now(),
-      products: [...cart],
-      total: total,
-      paymentMethod: selectedPayment.value,
-      status: "Pendiente de pago",
-      date: new Date().toLocaleString("es-MX")
-    };
+    if (sessionError || !sessionData.session) {
+      alert("Inicia sesión para registrar tu venta.");
+      return;
+    }
 
-    let orders = JSON.parse(
-      localStorage.getItem("tecnoluxxeOrders") || "[]"
-    );
+    // Adaptar carrito a los identificadores de Supabase
+    const items = cart.map(item => ({
+      producto_id: Number(item.id_producto ?? item.id),
+      cantidad: Number(item.quantity)
+    }));
 
-    orders.push(order);
+    if (items.some(item =>
+      !Number.isSafeInteger(item.producto_id) ||
+      item.producto_id <= 0 ||
+      !Number.isSafeInteger(item.cantidad) ||
+      item.cantidad <= 0
+    )) {
+      alert("Hay productos con identificadores o cantidades inválidas.");
+      return;
+    }
 
-    localStorage.setItem(
-      "tecnoluxxeOrders",
-      JSON.stringify(orders)
-    );
+    const originalText = checkoutBtn.textContent;
+    checkoutBtn.disabled = true;
+    checkoutBtn.textContent = "Registrando venta...";
 
-    cart = [];
+    try {
+      const { data: ventaId, error } =
+        await supabaseClient.rpc("registrar_venta", {
+          p_items: items
+        });
 
-    saveCart();
-    renderCart();
+      if (error) {
+        throw error;
+      }
 
-    document.querySelectorAll(
-      'input[name="paymentMethod"]'
-    ).forEach(input => input.checked = false);
+      const total = cart.reduce((sum, item) => {
+        return sum + Number(item.price) * item.quantity;
+      }, 0);
 
-    alert(
-      "¡Tu pedido se ha registrado correctamente!\n\n" +
-      "Número de pedido: " + order.id +
-      "\nTotal: $" + total + " MXN" +
-      "\nMétodo de pago: " + order.paymentMethod
-    );
+      const paymentMethod = selectedPayment.value;
 
-    closeCart();
+      // Limpiar carrito únicamente después de confirmar la venta
+      cart = [];
+
+      saveCart();
+      renderCart();
+
+      document.querySelectorAll(
+        'input[name="paymentMethod"]'
+      ).forEach(input => input.checked = false);
+
+      closeCart();
+
+      alert(
+        "¡Venta registrada en Supabase!\n\n" +
+        "Folio: " + ventaId +
+        "\nTotal mostrado: $" + total.toFixed(2) + " MXN" +
+        "\nMétodo de pago: " + paymentMethod
+      );
+
+    } catch (error) {
+      console.error("Error al registrar venta:", error);
+      alert("No se pudo registrar la venta:\n" + error.message);
+    } finally {
+      checkoutBtn.disabled = false;
+      checkoutBtn.textContent = originalText;
+    }
   });
 }
+
 
 const menuBtn = document.getElementById("menuBtn");
 const nav = document.getElementById("nav");
