@@ -701,29 +701,183 @@ menuBtn?.addEventListener("click", () => {
   nav?.classList.toggle("open");
 });
 
+
+// ======================================
+// AUTENTICACIÓN Y PERFILES TECNOLUXXE
+// ======================================
+
 const loginModal = document.getElementById("loginModal");
 const loginOpen = document.getElementById("loginOpen");
 const loginClose = document.getElementById("loginClose");
+
+const loginView = document.getElementById("loginView");
+const registerView = document.getElementById("registerView");
+
 const loginForm = document.getElementById("loginForm");
+const registerForm = document.getElementById("registerForm");
+
 const loginMessage = document.getElementById("loginMessage");
+const registerMessage = document.getElementById("registerMessage");
 
-loginOpen?.addEventListener("click", () => {
-  loginModal?.classList.remove("hidden");
+const adminDashboard = document.getElementById("adminDashboard");
+
+function openLogin() {
+  loginModal.classList.remove("hidden");
+}
+
+function closeLogin() {
+  loginModal.classList.add("hidden");
+}
+
+loginOpen?.addEventListener("click", openLogin);
+loginClose?.addEventListener("click", closeLogin);
+
+loginModal?.addEventListener("click", event => {
+  if (event.target === loginModal) closeLogin();
 });
 
-loginClose?.addEventListener("click", () => {
-  loginModal?.classList.add("hidden");
+document.getElementById("showRegister")?.addEventListener("click", () => {
+  loginView.classList.add("hidden");
+  registerView.classList.remove("hidden");
 });
 
-loginForm?.addEventListener("submit", event => {
+document.getElementById("showLogin")?.addEventListener("click", () => {
+  registerView.classList.add("hidden");
+  loginView.classList.remove("hidden");
+});
+
+// REGISTRO
+registerForm?.addEventListener("submit", async event => {
   event.preventDefault();
 
-  const email = document.getElementById("email")?.value;
+  const nombre = document.getElementById("registerName").value.trim();
+  const email = document.getElementById("registerEmail").value.trim();
+  const password = document.getElementById("registerPassword").value;
 
-  if (loginMessage) {
-    loginMessage.textContent =
-      `Sesión de prueba iniciada con ${email}`;
+  registerMessage.textContent = "Creando cuenta...";
+
+  const { data, error } = await supabaseClient.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { nombre }
+    }
+  });
+
+  if (error) {
+    registerMessage.textContent = error.message;
+    return;
   }
+
+  registerMessage.textContent = data.session
+    ? "¡Cuenta creada correctamente!"
+    : "Revisa tu correo para confirmar tu cuenta.";
+
+  if (data.session) {
+    registerForm.reset();
+    closeLogin();
+  }
+});
+
+// INICIO DE SESIÓN
+loginForm?.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  loginMessage.textContent = "Verificando acceso...";
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    loginMessage.textContent = "No se pudo iniciar sesión: " + error.message;
+    return;
+  }
+
+  loginMessage.textContent = "Acceso correcto.";
+  closeLogin();
+});
+
+// CONSULTAR PERFIL Y PERMISOS
+async function actualizarSesion(session) {
+  if (!session) {
+    adminDashboard?.classList.add("hidden");
+    loginOpen.textContent = "Iniciar sesión";
+    loginOpen.onclick = openLogin;
+    return;
+  }
+
+  const { data: perfil, error } = await supabaseClient
+    .from("perfiles")
+    .select("nombre, rol")
+    .eq("id", session.user.id)
+    .single();
+
+  if (error || !perfil) {
+    console.error("Error consultando perfil:", error);
+    return;
+  }
+
+  loginOpen.textContent = "Cerrar sesión";
+  loginOpen.onclick = async () => {
+    await supabaseClient.auth.signOut();
+  };
+
+  if (perfil.rol === "administrador") {
+    adminDashboard.classList.remove("hidden");
+
+    document.getElementById("adminName").textContent =
+      perfil.nombre || session.user.email;
+
+    await cargarUsuarios();
+  } else {
+    adminDashboard?.classList.add("hidden");
+  }
+}
+
+// LISTADO DE USUARIOS PARA ADMINISTRADOR
+async function cargarUsuarios() {
+  const { data, error } = await supabaseClient
+    .from("perfiles")
+    .select("nombre, rol")
+    .order("nombre");
+
+  if (error) {
+    console.error("Error cargando usuarios:", error);
+    return;
+  }
+
+  document.getElementById("userCount").textContent = data.length;
+
+  const table = document.getElementById("usersTable");
+  table.replaceChildren();
+
+  data.forEach(usuario => {
+    const row = document.createElement("tr");
+    const name = document.createElement("td");
+    const role = document.createElement("td");
+
+    name.textContent = usuario.nombre || "Sin nombre";
+    role.textContent = usuario.rol;
+
+    row.append(name, role);
+    table.appendChild(row);
+  });
+}
+
+// RESTAURAR SESIÓN Y ESCUCHAR CAMBIOS
+supabaseClient.auth.getSession().then(({ data }) => {
+  actualizarSesion(data.session);
+});
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (event === "INITIAL_SESSION") return;
+
+  actualizarSesion(session);
 });
 
 const chatOpen = document.getElementById("chatOpen");
